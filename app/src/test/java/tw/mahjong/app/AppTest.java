@@ -1,4 +1,4 @@
-package mahjong;
+package tw.mahjong.app;
 
 import org.junit.jupiter.api.Test;
 

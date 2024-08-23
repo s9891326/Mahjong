@@ -11,10 +11,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <artifactId>spring</artifactId>
+    <groupId>tw.mahjonge</groupId>
+    <artifactId>web</artifactId>
     <version>0.0.1</version>
-    <packaging>jar</packaging>
-    <name>spring</name>
+    <name>web</name>
     <description>web</description>
 
     <properties>
@@ -24,6 +24,11 @@
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -40,7 +45,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>mahjong</groupId>
+            <groupId>tw.mahjong</groupId>
             <artifactId>domain</artifactId>
             <version>0.0.1</version>
         </dependency>
@@ -52,7 +57,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!--                <configuration>-->
-                <!--                    <mainClass>mahjong.MahjongApplication</mainClass>-->
+                <!--                    <mainClass>tw.mahjong.web.MahjongApplication</mainClass>-->
                 <!--                </configuration>-->
             </plugin>
             <plugin>
@@ -64,7 +69,6 @@
                     <target>17</target>
                 </configuration>
             </plugin>
-
             <plugin>
                 <!-- Maven Failsafe插件是Maven提供的測試插件，用於執行整合測試-->
                 <groupId>org.apache.maven.plugins</groupId>
@@ -84,7 +88,6 @@
                     </includes>
                 </configuration>
             </plugin>
-
             <plugin>
                 <!--  Maven Surefire Plugin的主要作用是在Maven專案中執行測試案例。
                 它支援多種測試框架，如JUnit、TestNG等，
