@@ -9,19 +9,20 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>domain</module>
         <module>web</module>
         <module>app</module>
+        <module>domain</module>
     </modules>
 
     <properties>
         <java.version>17</java.version>
-        <maven-failsafe-plugin.version>2.22.0</maven-failsafe-plugin.version>
-        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <junit-jupiter.version>5.9.3</junit-jupiter.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <lombok.version>1.18.30</lombok.version>
     </properties>
 
     <dependencies>
@@ -44,41 +45,57 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven-failsafe-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <includes>
-                        <include>**/*IT.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <!-- Maven Failsafe插件是Maven提供的測試插件，用於執行整合測試-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <includes>
+                            <include>**/*IT.java</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+                <!--  Maven Surefire Plugin的主要作用是在Maven專案中執行測試案例。
+                它支援多種測試框架，如JUnit、TestNG等，
+                並能夠產生詳細的測試報告，幫助開發人員快速定位和修復問題。
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <!--                <configuration>-->
+                    <!--                    <testSourceDirectory>src/test/java/tw/mahjong/app</testSourceDirectory>-->
+                    <!--                    <includes>-->
+                    <!--                        <include>*Test.java</include>-->
+                    <!--                        <include>*Tests.java</include>-->
+                    <!--                        <include>**/*Test.java</include>-->
+                    <!--                        <include>**/*Tests.java</include>-->
+                    <!--                        <include>**/RunCucumberTest.java</include>-->
+                    <!--                    </includes>-->
+                    <!--                </configuration>-->
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>

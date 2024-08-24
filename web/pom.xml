@@ -46,6 +46,11 @@
         </dependency>
         <dependency>
             <groupId>tw.mahjong</groupId>
+            <artifactId>app</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>tw.mahjong</groupId>
             <artifactId>domain</artifactId>
             <version>0.0.1</version>
         </dependency>
@@ -82,28 +87,24 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <includes>
-                        <include>**/*IT.java</include>
-                    </includes>
-                </configuration>
             </plugin>
-            <plugin>
-                <!--  Maven Surefire Plugin的主要作用是在Maven專案中執行測試案例。
-                它支援多種測試框架，如JUnit、TestNG等，
-                並能夠產生詳細的測試報告，幫助開發人員快速定位和修復問題。
-                -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <testSourceDirectory>src/test/java</testSourceDirectory>
-                    <includes>
-                        <include>**/*Test.java</include>
-                        <include>**/*Tests.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
+
+            <!--            <plugin>-->
+            <!--                &lt;!&ndash;  Maven Surefire Plugin的主要作用是在Maven專案中執行測試案例。-->
+            <!--                它支援多種測試框架，如JUnit、TestNG等，-->
+            <!--                並能夠產生詳細的測試報告，幫助開發人員快速定位和修復問題。-->
+            <!--                &ndash;&gt;-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-surefire-plugin</artifactId>-->
+            <!--                <version>${maven-surefire-plugin.version}</version>-->
+            <!--                <configuration>-->
+            <!--                    <testSourceDirectory>src/test/java</testSourceDirectory>-->
+            <!--                    <includes>-->
+            <!--                        <include>**/*Test.java</include>-->
+            <!--                        <include>**/*Tests.java</include>-->
+            <!--                    </includes>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 </project>
