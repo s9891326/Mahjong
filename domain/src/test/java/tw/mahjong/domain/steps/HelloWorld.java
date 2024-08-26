@@ -1,4 +1,4 @@
-package tw.mahjong.domain;
+package tw.mahjong.domain.steps;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -6,7 +6,7 @@ import io.cucumber.java.en.When;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class StepDefinitions {
+public class HelloWorld {
     private int hour;
 
     @Given("I have {int} kidney in my belly")
