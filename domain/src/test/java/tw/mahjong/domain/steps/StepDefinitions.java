@@ -38,7 +38,18 @@ public class StepDefinitions {
 
     @Then("出牌成功")
     public void successPlayTile() {
-        assertTrue(player.isFinish());
+        assertTrue(player.isSuccessPlayTile());
+        System.out.println("hand tiles:" + player.getHandTile());
+    }
+
+    @When("系統發了一張 {string}")
+    public void drawTile(String tile) {
+        player.addHandTile(tile);
+    }
+
+    @Then("摸牌成功")
+    public void successDrawTile() {
+        assertTrue(player.isSuccessDrawTile());
         System.out.println("hand tiles:" + player.getHandTile());
     }
 }

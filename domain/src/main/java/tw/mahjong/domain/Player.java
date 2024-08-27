@@ -13,12 +13,12 @@ public class Player {
 
     public void setHandTile(List<String> handTiles) {
         for (String tile : handTiles) {
-            this.addHandTile(Tile.findTileByName(tile));
+            this.addHandTile(tile);
         }
     }
 
-    public void addHandTile(Tile tile) {
-        this.handTile.add(tile);
+    public void addHandTile(String tile) {
+        this.handTile.add(Tile.findTileByName(tile));
     }
 
     public void playTile(String tile) throws MahjongException {
@@ -30,7 +30,11 @@ public class Player {
         }
     }
 
-    public boolean isFinish() {
+    public boolean isSuccessPlayTile() {
         return this.handTile.size() == 16;
+    }
+
+    public boolean isSuccessDrawTile() {
+        return this.handTile.size() == 17;
     }
 }
