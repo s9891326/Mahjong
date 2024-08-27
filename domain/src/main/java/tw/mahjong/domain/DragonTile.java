@@ -3,11 +3,11 @@ package tw.mahjong.domain;
 import java.util.Arrays;
 import java.util.List;
 
-public class DragonCard extends Card {
+public class DragonTile extends Tile {
 
     public static List<String> typeName = Arrays.asList("紅中", "發財", "白板");
 
-    public DragonCard(String value) {
+    public DragonTile(String value) {
         super.value = value;
     }
 

@@ -9,28 +9,32 @@ import java.util.List;
 
 public class Player {
     @Getter
-    public List<Card> handCard = new ArrayList<>();
+    public List<Tile> handTile = new ArrayList<>();
 
-    public void setHandCard(List<String> handCards) {
-        for (String card : handCards) {
-            this.addHandCard(Card.findCardByName(card));
+    public void setHandTile(List<String> handTiles) {
+        for (String tile : handTiles) {
+            this.addHandTile(tile);
         }
     }
 
-    public void addHandCard(Card card) {
-        this.handCard.add(card);
+    public void addHandTile(String tile) {
+        this.handTile.add(Tile.findTileByName(tile));
     }
 
-    public void playCard(String card) throws MahjongException {
-        Card playedCard = Card.findCardByName(card);
-        if (this.handCard.contains(playedCard)) {
-            this.handCard.remove(playedCard);
+    public void playTile(String tile) throws MahjongException {
+        Tile playedTile = Tile.findTileByName(tile);
+        if (this.handTile.contains(playedTile)) {
+            this.handTile.remove(playedTile);
         } else {
             throw new MahjongException("沒這張卡");
         }
     }
 
-    public boolean isFinish() {
-        return this.handCard.size() == 16;
+    public boolean isSuccessPlayTile() {
+        return this.handTile.size() == 16;
+    }
+
+    public boolean isSuccessDrawTile() {
+        return this.handTile.size() == 17;
     }
 }
