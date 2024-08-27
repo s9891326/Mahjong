@@ -13,7 +13,7 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @IncludeEngines("cucumber")
 @SelectPackages("features")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "tw.mahjong.domain")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "tw.mahjong.domain.steps")
 public class RunCucumberTest {
     @Test
     public void test() {
