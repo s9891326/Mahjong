@@ -39,5 +39,6 @@ public class StepDefinitions {
     @Then("出牌成功")
     public void successPlayCard() {
         assertTrue(player.isFinish());
+        System.out.println("hand cards:" + player.getHandCard());
     }
 }
