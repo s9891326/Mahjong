@@ -20,25 +20,25 @@ public class StepDefinitions {
     }
 
     @Given("自己手牌有 {string}")
-    public void setupHands(String handCards) {
-        List<String> handCard = Arrays.stream(handCards.split("、")).collect(Collectors.toList());
-        player.setHandCard(handCard);
-        System.out.println("hand cards:" + player.getHandCard());
+    public void setupHands(String handTiles) {
+        List<String> handTile = Arrays.stream(handTiles.split("、")).collect(Collectors.toList());
+        player.setHandTile(handTile);
+        System.out.println("hand tiles:" + player.getHandTile());
     }
 
     @When("出一張 {string}")
-    public void playCard(String card) {
+    public void playTile(String tile) {
         try {
-            player.playCard(card);
-            System.out.println("play: " + card);
+            player.playTile(tile);
+            System.out.println("play: " + tile);
         } catch (MahjongException e) {
             System.out.println(e.getMessage());
         }
     }
 
     @Then("出牌成功")
-    public void successPlayCard() {
+    public void successPlayTile() {
         assertTrue(player.isFinish());
-        System.out.println("hand cards:" + player.getHandCard());
+        System.out.println("hand tiles:" + player.getHandTile());
     }
 }
