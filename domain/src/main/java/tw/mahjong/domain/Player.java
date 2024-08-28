@@ -10,6 +10,8 @@ import java.util.List;
 public class Player {
     @Getter
     public List<Tile> handTile = new ArrayList<>();
+    @Getter
+    public List<Tile> doorFront = new ArrayList<>();
 
     public void setHandTile(List<String> handTiles) {
         for (String tile : handTiles) {
@@ -36,5 +38,18 @@ public class Player {
 
     public boolean isSuccessDrawTile() {
         return this.handTile.size() == 17;
+    }
+
+    public void chi(String tile) {
+        List<Tile> chiOption = Tile.getChiOption(this.handTile, tile);
+        if (chiOption.isEmpty()) {
+            System.out.println("沒牌可以吃");
+            return;
+        }
+
+        for (Tile option : chiOption) {
+            this.handTile.remove(option);
+            this.doorFront.add(option);
+        }
     }
 }

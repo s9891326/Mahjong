@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StepDefinitions {
@@ -51,5 +52,19 @@ public class StepDefinitions {
     public void successDrawTile() {
         assertTrue(player.isSuccessDrawTile());
         System.out.println("hand tiles:" + player.getHandTile());
+    }
+
+    @When("上家打了 {string} 自己喊吃")
+    public void chiTile(String tile) {
+        player.chi(tile);
+    }
+
+    @Then("吃牌成功")
+    public void successChiTile() {
+        /*從手牌-3張，亮出來的為順子(系統亮牌132萬)*/
+        System.out.println("hand titles: " + player.getHandTile());
+        System.out.println("door front: " + player.getDoorFront());
+        assertEquals(13, player.getHandTile().size());
+        assertEquals(3, player.getDoorFront().size());
     }
 }
