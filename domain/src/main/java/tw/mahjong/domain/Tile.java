@@ -1,6 +1,8 @@
 package tw.mahjong.domain;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class Tile {
@@ -22,6 +24,33 @@ public abstract class Tile {
         }
         tile.setTileValue(pre);
         return tile;
+    }
+
+    public static List<Tile> getChiOption(List<Tile> handTile, String name) {
+        List<Tile> chiOption = new ArrayList<>();
+
+        SuitTile suitTile = (SuitTile) findTileByName(name);
+        int[] values = {suitTile.getNumber() - 2, suitTile.getNumber() - 1, suitTile.getNumber() + 1, suitTile.getNumber() + 2};
+        List<Tile> possibleOption = new ArrayList<>();
+
+        for (int value : values) {
+            if (value >= 1 && value <= 9) {
+                try {
+                    SuitTile tempTile = (SuitTile) suitTile.clone();
+                    tempTile.setTileValue(String.valueOf(value));
+                    possibleOption.add(tempTile);
+                } catch (CloneNotSupportedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        possibleOption.removeIf(t -> !handTile.contains(t));
+        if (possibleOption.size() >= 2) {
+            chiOption.add(possibleOption.get(0));
+            chiOption.add(suitTile);
+            chiOption.add(possibleOption.get(1));
+        }
+        return chiOption;
     }
 
     public void setTileValue(String value) {
