@@ -54,9 +54,13 @@ public class StepDefinitions {
         System.out.println("hand tiles:" + player.getHandTile());
     }
 
-    @When("上家打了 {string} 自己喊吃")
-    public void chiTile(String tile) {
-        player.chi(tile);
+    @When("{string} 打了 {string} 自己喊吃")
+    public void chiTile(String otherPlayer, String tile) {
+        if (otherPlayer.equals("上家")) {
+            player.chi(tile);
+        } else {
+            System.out.println("只能吃上家打的牌");
+        }
     }
 
     @Then("吃牌成功")
@@ -66,5 +70,11 @@ public class StepDefinitions {
         System.out.println("door front: " + player.getDoorFront());
         assertEquals(13, player.getHandTile().size());
         assertEquals(3, player.getDoorFront().size());
+    }
+
+    @Then("吃牌失敗")
+    public void failChiTile() {
+        assertEquals(16, player.getHandTile().size());
+        assertEquals(0, player.getDoorFront().size());
     }
 }

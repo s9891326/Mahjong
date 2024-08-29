@@ -35,11 +35,11 @@ public class SuitTile extends Tile implements Cloneable {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         SuitTile suitTile = (SuitTile) o;
-        return number == suitTile.number;
+        return number == suitTile.number && type.equals(suitTile.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), number);
+        return Objects.hash(super.hashCode(), number, type);
     }
 }
