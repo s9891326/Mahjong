@@ -5,6 +5,7 @@ import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class Player {
@@ -40,7 +41,18 @@ public class Player {
         return this.handTile.size() == 17;
     }
 
-    public void chi(String tileName) {
+    public void chi(String otherPlayer, String tileName, String action) {
+        if (!otherPlayer.equals("上家")) {
+            System.out.println("只能吃上家打的牌");
+            return;
+        }
+
+        Set<String> validActions = Set.of("碰", "胡");
+        if (validActions.contains(action)) {
+            System.out.println("其他玩家做了: " + action + "所以不能吃");
+            return;
+        }
+
         Tile tile = Tile.findTileByName(tileName);
 
         if (!(tile instanceof SuitTile suitTile)) {

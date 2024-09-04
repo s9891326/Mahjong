@@ -59,11 +59,7 @@ public class StepDefinitions {
 
     @When("{string} 打了 {string} 自己喊吃")
     public void chiTile(String otherPlayer, String tile) {
-        if (otherPlayer.equals("上家")) {
-            player.chi(tile);
-        } else {
-            System.out.println("只能吃上家打的牌");
-        }
+        player.chi(otherPlayer, tile, "");
     }
 
     @Then("吃牌成功")
@@ -121,4 +117,8 @@ public class StepDefinitions {
         }
     }
 
+    @When("{string} 打了 {string} 自己喊吃但其他玩家喊了 {string}")
+    public void chiTileButHappenSomething(String otherPlayer, String tile, String action) {
+        player.chi(otherPlayer, tile, action);
+    }
 }
