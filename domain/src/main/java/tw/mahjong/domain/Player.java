@@ -47,7 +47,7 @@ public class Player {
             return;
         }
 
-        Set<String> validActions = Set.of("碰", "胡");
+        Set<String> validActions = Set.of("碰", "胡", "槓");
         if (validActions.contains(action)) {
             System.out.println("其他玩家做了: " + action + "所以不能吃");
             return;
