@@ -1,11 +1,14 @@
 package tw.mahjong.domain;
 
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class Tile {
+    @Getter
     public String value;
 
     public static Tile findTileByName(String name) {
@@ -26,10 +29,9 @@ public abstract class Tile {
         return tile;
     }
 
-    public static List<Tile> getChiOption(List<Tile> handTile, String name) {
+    public static List<Tile> getChiOption(List<Tile> handTiles, SuitTile suitTile) {
         List<Tile> chiOption = new ArrayList<>();
 
-        SuitTile suitTile = (SuitTile) findTileByName(name);
         int[] values = {suitTile.getNumber() - 2, suitTile.getNumber() - 1, suitTile.getNumber() + 1, suitTile.getNumber() + 2};
         List<Tile> possibleOption = new ArrayList<>();
 
@@ -44,13 +46,29 @@ public abstract class Tile {
                 }
             }
         }
-        possibleOption.removeIf(t -> !handTile.contains(t));
+        possibleOption.removeIf(t -> !handTiles.contains(t));
         if (possibleOption.size() >= 2) {
             chiOption.add(possibleOption.get(0));
             chiOption.add(suitTile);
             chiOption.add(possibleOption.get(1));
         }
         return chiOption;
+    }
+
+    public static List<Tile> getPongOption(List<Tile> handTiles, Tile tile) {
+        List<Tile> pongOption = new ArrayList<>();
+
+        for (Tile handTile : handTiles) {
+            if (handTile.equals(tile) && pongOption.size() < 2) {
+                pongOption.add(handTile);
+            }
+        }
+
+        if (pongOption.size() > 0) {
+            pongOption.add(tile);
+        }
+
+        return pongOption;
     }
 
     public void setTileValue(String value) {

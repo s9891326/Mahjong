@@ -40,15 +40,40 @@ public class Player {
         return this.handTile.size() == 17;
     }
 
-    public void chi(String tile) {
-        List<Tile> chiOption = Tile.getChiOption(this.handTile, tile);
+    public void chi(String tileName) {
+        Tile tile = Tile.findTileByName(tileName);
+
+        if (!(tile instanceof SuitTile suitTile)) {
+            System.out.println("只有敘數牌能吃");
+            return;
+        }
+
+        List<Tile> chiOption = Tile.getChiOption(this.handTile, suitTile);
         if (chiOption.isEmpty()) {
             System.out.println("沒牌可以吃");
             return;
         }
 
         for (Tile option : chiOption) {
-            this.handTile.remove(option);
+            if (option != suitTile) {
+                this.handTile.remove(option);
+            }
+            this.doorFront.add(option);
+        }
+    }
+
+    public void pong(String tileName) {
+        Tile tile = Tile.findTileByName(tileName);
+        List<Tile> pongOption = Tile.getPongOption(this.handTile, tile);
+        if (pongOption.isEmpty()) {
+            System.out.println("沒牌可以碰");
+            return;
+        }
+
+        for (Tile option : pongOption) {
+            if (option != tile) {
+                this.handTile.remove(option);
+            }
             this.doorFront.add(option);
         }
     }
