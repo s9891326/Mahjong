@@ -12,7 +12,9 @@ public class SuitTile extends Tile implements Cloneable {
     //    筒（Circle）條（Bamboo）萬（Characters）
     @Getter
     private int number;
+    @Getter
     private String type;
+
     public static List<String> typeName = Arrays.asList("萬", "筒", "條");
 
     public SuitTile(String type) {
