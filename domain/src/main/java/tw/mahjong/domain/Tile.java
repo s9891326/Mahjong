@@ -10,6 +10,7 @@ import java.util.Objects;
 public abstract class Tile {
     @Getter
     public String value;
+    public static final int QUANTITY = 4;
 
     public static Tile findTileByName(String name) {
         String[] parts = name.split("");
@@ -19,8 +20,9 @@ public abstract class Tile {
         Tile tile = null;
         if (SuitTile.typeName.contains(suf)) {
             tile = new SuitTile(suf);
-        } else if (WindsTile.typeName.equals(suf)) {
-            tile = new WindsTile();
+        } else if (WindsTile.typeName.contains(name)) {
+            tile = new WindsTile(name);
+            pre = name;
         } else if (DragonTile.typeName.contains(name)) {
             tile = new DragonTile(name);
             pre = name;
@@ -36,7 +38,7 @@ public abstract class Tile {
         List<Tile> possibleOption = new ArrayList<>();
 
         for (int value : values) {
-            if (value >= 1 && value <= 9) {
+            if (value >= SuitTile.MIN_NUMBER && value <= SuitTile.MAX_NUMBER) {
                 try {
                     SuitTile tempTile = (SuitTile) suitTile.clone();
                     tempTile.setTileValue(String.valueOf(value));
@@ -90,8 +92,6 @@ public abstract class Tile {
 
     @Override
     public String toString() {
-        return "Tile{" +
-                "value='" + value + '\'' +
-                '}';
+        return this.value;
     }
 }
