@@ -10,9 +10,4 @@ public class DragonTile extends Tile {
     public DragonTile(String value) {
         super.value = value;
     }
-
-    @Override
-    public String toString() {
-        return super.value;
-    }
 }

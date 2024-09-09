@@ -1,6 +1,7 @@
 package tw.mahjong.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.ArrayList;
@@ -14,6 +15,10 @@ public class Player {
     @Getter
     public List<Tile> doorFront = new ArrayList<>();
 
+    @Getter
+    @Setter
+    public String name = "";
+
     public void setHandTile(List<String> handTiles) {
         for (String tile : handTiles) {
             this.addHandTile(tile);
@@ -22,6 +27,10 @@ public class Player {
 
     public void addHandTile(String tile) {
         this.handTile.add(Tile.findTileByName(tile));
+    }
+
+    public void addHandTile(Tile tile) {
+        this.handTile.add(tile);
     }
 
     public void playTile(String tile) throws MahjongException {
@@ -88,5 +97,12 @@ public class Player {
             }
             this.doorFront.add(option);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

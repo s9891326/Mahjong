@@ -14,11 +14,18 @@ public class SuitTile extends Tile implements Cloneable {
     private int number;
     @Getter
     private String type;
+    public static final int MIN_NUMBER = 1;
+    public static final int MAX_NUMBER = 9;
 
     public static List<String> typeName = Arrays.asList("萬", "筒", "條");
 
     public SuitTile(String type) {
         this.type = type;
+    }
+
+    public SuitTile(String type, int number) {
+        this.type = type;
+        this.number = number;
     }
 
     @Override
