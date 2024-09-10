@@ -13,11 +13,19 @@ public abstract class Tile {
     public static final int QUANTITY = 4;
 
     public static Tile findTileByName(String name) {
-        String[] parts = name.split("");
-        String pre = parts[0];
-        String suf = parts[1];
+        String[] parts;
+        String pre;
+        String suf = "";
+        try {
+            parts = name.split("");
+            pre = parts[0];
+            suf = parts[1];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            pre = name;
+        }
 
-        Tile tile = null;
+
+        Tile tile;
         if (SuitTile.typeName.contains(suf)) {
             tile = new SuitTile(suf);
         } else if (WindsTile.typeName.contains(name)) {
@@ -26,6 +34,8 @@ public abstract class Tile {
         } else if (DragonTile.typeName.contains(name)) {
             tile = new DragonTile(name);
             pre = name;
+        } else {
+            tile = new BonusTile(name);
         }
         tile.setTileValue(pre);
         return tile;

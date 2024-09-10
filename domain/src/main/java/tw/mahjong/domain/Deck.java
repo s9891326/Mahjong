@@ -38,11 +38,7 @@ public class Deck {
             });
         }
 
-        for (String type : BonusTile.flowers) {
-            this.tile.add(new BonusTile(type));
-        }
-
-        for (String type : BonusTile.seasons) {
+        for (String type : BonusTile.BONUS_TILE_SEAT.keySet()) {
             this.tile.add(new BonusTile(type));
         }
         Collections.shuffle(this.tile);

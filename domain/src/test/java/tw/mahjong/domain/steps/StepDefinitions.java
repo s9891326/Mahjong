@@ -10,7 +10,6 @@ import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,8 +23,10 @@ public class StepDefinitions {
 
     @Given("自己手牌有 {string}")
     public void setupHands(String handTiles) {
-        List<String> handTile = Arrays.stream(handTiles.split("、")).collect(Collectors.toList());
-        player.setHandTile(handTile);
+        List<String> handTile = Arrays.stream(handTiles.split("、")).toList();
+        for (String tile : handTile) {
+            player.addHandTile(Tile.findTileByName(tile));
+        }
         System.out.println("hand tiles:" + player.getHandTile());
     }
 
@@ -33,7 +34,7 @@ public class StepDefinitions {
     @Then("自己打了一張 {string}")
     public void playTile(String tile) {
         try {
-            player.playTile(tile);
+            player.playTile(Tile.findTileByName(tile));
             System.out.println("play: " + tile);
         } catch (MahjongException e) {
             System.out.println(e.getMessage());
@@ -48,7 +49,7 @@ public class StepDefinitions {
 
     @When("系統發了一張 {string}")
     public void drawTile(String tile) {
-        player.addHandTile(tile);
+        player.addHandTile(Tile.findTileByName(tile));
     }
 
     @Then("摸牌成功")
@@ -59,7 +60,7 @@ public class StepDefinitions {
 
     @When("{string} 打了 {string} 自己喊吃")
     public void chiTile(String otherPlayer, String tile) {
-        player.chi(otherPlayer, tile, "");
+        player.chi(otherPlayer, Tile.findTileByName(tile), "");
     }
 
     @Then("吃牌成功")
@@ -90,7 +91,7 @@ public class StepDefinitions {
 
     @When("{string} 打了 {string} 自己喊碰")
     public void pongTile(String otherPlayer, String tile) {
-        player.pong(tile);
+        player.pong(Tile.findTileByName(tile));
     }
 
     @Then("碰牌成功")
@@ -119,6 +120,22 @@ public class StepDefinitions {
 
     @When("{string} 打了 {string} 自己喊吃但其他玩家喊了 {string}")
     public void chiTileButHappenSomething(String otherPlayer, String tile, String action) {
-        player.chi(otherPlayer, tile, action);
+        player.chi(otherPlayer, Tile.findTileByName(tile), action);
+    }
+
+    @When("輪到自己補花，補到了 {string}")
+    public void foulHand(String tiles) {
+        player.foulHand();
+        for (String tile : Arrays.stream(tiles.split("、")).toList()) {
+            player.addHandTile(Tile.findTileByName(tile));
+        }
+    }
+
+    @Then("補花成功，手牌要 {int}，門前要 {int}")
+    public void successFoulHand(int handTileSize, int doorFrontSize) {
+        System.out.println("hand titles: " + player.getHandTile());
+        System.out.println("door front: " + player.getDoorFront());
+        assertEquals(handTileSize, player.getHandTile().size());
+        assertEquals(doorFrontSize, player.getDoorFront().size());
     }
 }

@@ -1,13 +1,27 @@
 package tw.mahjong.domain;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 public class BonusTile extends Tile {
-    public static List<String> flowers = Arrays.asList("梅", "蘭", "竹", "菊");
-    public static List<String> seasons = Arrays.asList("春", "夏", "秋", "冬");
+    public static final Map<String, Integer> BONUS_TILE_SEAT = Map.of(
+            "梅", 1,
+            "蘭", 2,
+            "竹", 3,
+            "菊", 4,
+            "春", 1,
+            "夏", 2,
+            "秋", 3,
+            "冬", 4
+    );
+
+    private int number;
 
     public BonusTile(String value) {
         super.value = value;
+    }
+
+    @Override
+    public void setTileValue(String value) {
+        this.number = BONUS_TILE_SEAT.get(value);
     }
 }
