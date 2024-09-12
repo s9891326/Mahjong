@@ -7,36 +7,26 @@ import tw.mahjong.domain.exceptions.MahjongException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Player {
     @Getter
-    public List<Tile> handTile = new ArrayList<>();
+    private final List<Tile> handTile = new ArrayList<>();
     @Getter
-    public List<Tile> doorFront = new ArrayList<>();
+    private final List<Tile> doorFront = new ArrayList<>();
 
     @Getter
     @Setter
     public String name = "";
 
-    public void setHandTile(List<String> handTiles) {
-        for (String tile : handTiles) {
-            this.addHandTile(tile);
-        }
-    }
-
-    public void addHandTile(String tile) {
-        this.handTile.add(Tile.findTileByName(tile));
-    }
-
     public void addHandTile(Tile tile) {
         this.handTile.add(tile);
     }
 
-    public void playTile(String tile) throws MahjongException {
-        Tile playedTile = Tile.findTileByName(tile);
-        if (this.handTile.contains(playedTile)) {
-            this.handTile.remove(playedTile);
+    public void playTile(Tile tile) throws MahjongException {
+        if (this.handTile.contains(tile)) {
+            this.handTile.remove(tile);
         } else {
             throw new MahjongException("沒這張卡");
         }
@@ -50,7 +40,7 @@ public class Player {
         return this.handTile.size() == 17;
     }
 
-    public void chi(String otherPlayer, String tileName, String action) {
+    public void chi(String otherPlayer, Tile tile, String action) {
         if (!otherPlayer.equals("上家")) {
             System.out.println("只能吃上家打的牌");
             return;
@@ -61,8 +51,6 @@ public class Player {
             System.out.println("其他玩家做了: " + action + "所以不能吃");
             return;
         }
-
-        Tile tile = Tile.findTileByName(tileName);
 
         if (!(tile instanceof SuitTile suitTile)) {
             System.out.println("只有敘數牌能吃");
@@ -83,8 +71,7 @@ public class Player {
         }
     }
 
-    public void pong(String tileName) {
-        Tile tile = Tile.findTileByName(tileName);
+    public void pong(Tile tile) {
         List<Tile> pongOption = Tile.getPongOption(this.handTile, tile);
         if (pongOption.isEmpty()) {
             System.out.println("沒牌可以碰");
@@ -97,6 +84,23 @@ public class Player {
             }
             this.doorFront.add(option);
         }
+    }
+
+    public AtomicInteger foulHand() {
+        AtomicInteger foulHandNum = new AtomicInteger(0);
+        this.handTile.removeIf(tile -> {
+            if (tile instanceof BonusTile) {
+                this.doorFront.add(tile);
+                foulHandNum.getAndIncrement();
+                return true;
+            }
+            return false;
+        });
+        return foulHandNum;
+    }
+
+    public boolean hasBonusTile() {
+        return this.handTile.stream().anyMatch(tile -> tile instanceof BonusTile);
     }
 
     @Override

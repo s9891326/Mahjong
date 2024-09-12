@@ -11,12 +11,9 @@ import java.util.function.Function;
 public class Deck {
     public static final int MAX_HAND_TILE = 17;
     @Getter
-    public List<Tile> tile = null;
+    public List<Tile> tile;
 
-    private final Map<List<String>, Function<String, Tile>> deckTile = Map.of(DragonTile.typeName, DragonTile::new, WindsTile.typeName, WindsTile::new);
-
-    public Deck() {
-    }
+    private final Map<List<String>, Function<String, Tile>> tileFactoriesByType = Map.of(DragonTile.typeName, DragonTile::new, WindsTile.typeName, WindsTile::new);
 
     public void shuffle() {
         /**
@@ -31,18 +28,14 @@ public class Deck {
                 }
             }
 
-            this.deckTile.forEach((typeNames, tileConstructor) -> {
+            this.tileFactoriesByType.forEach((typeNames, tileConstructor) -> {
                 for (String type : typeNames) {
                     this.tile.add(tileConstructor.apply(type));
                 }
             });
         }
 
-        for (String type : BonusTile.flowers) {
-            this.tile.add(new BonusTile(type));
-        }
-
-        for (String type : BonusTile.seasons) {
+        for (String type : BonusTile.BONUS_TILE_SEAT.keySet()) {
             this.tile.add(new BonusTile(type));
         }
         Collections.shuffle(this.tile);
@@ -53,6 +46,6 @@ public class Deck {
             return;
         }
 
-        player.addHandTile(this.tile.remove(0));
+        player.addHandTile(this.getTile().remove(0));
     }
 }
