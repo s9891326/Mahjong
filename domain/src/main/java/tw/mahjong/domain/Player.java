@@ -7,13 +7,14 @@ import tw.mahjong.domain.exceptions.MahjongException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Player {
     @Getter
-    public List<Tile> handTile = new ArrayList<>();
+    private final List<Tile> handTile = new ArrayList<>();
     @Getter
-    public List<Tile> doorFront = new ArrayList<>();
+    private final List<Tile> doorFront = new ArrayList<>();
 
     @Getter
     @Setter
@@ -85,15 +86,21 @@ public class Player {
         }
     }
 
-    public void foulHand() {
+    public AtomicInteger foulHand() {
+        AtomicInteger foulHandNum = new AtomicInteger(0);
         this.handTile.removeIf(tile -> {
             if (tile instanceof BonusTile) {
                 this.doorFront.add(tile);
-                // 從牌庫中抽一張牌
+                foulHandNum.getAndIncrement();
                 return true;
             }
             return false;
         });
+        return foulHandNum;
+    }
+
+    public boolean hasBonusTile() {
+        return this.handTile.stream().anyMatch(tile -> tile instanceof BonusTile);
     }
 
     @Override

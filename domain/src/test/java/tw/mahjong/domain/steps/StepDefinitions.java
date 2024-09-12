@@ -122,20 +122,4 @@ public class StepDefinitions {
     public void chiTileButHappenSomething(String otherPlayer, String tile, String action) {
         player.chi(otherPlayer, Tile.findTileByName(tile), action);
     }
-
-    @When("輪到自己補花，補到了 {string}")
-    public void foulHand(String tiles) {
-        player.foulHand();
-        for (String tile : Arrays.stream(tiles.split("、")).toList()) {
-            player.addHandTile(Tile.findTileByName(tile));
-        }
-    }
-
-    @Then("補花成功，手牌要 {int}，門前要 {int}")
-    public void successFoulHand(int handTileSize, int doorFrontSize) {
-        System.out.println("hand titles: " + player.getHandTile());
-        System.out.println("door front: " + player.getDoorFront());
-        assertEquals(handTileSize, player.getHandTile().size());
-        assertEquals(doorFrontSize, player.getDoorFront().size());
-    }
 }
