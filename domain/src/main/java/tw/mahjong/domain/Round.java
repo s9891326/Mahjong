@@ -21,25 +21,32 @@ public class Round {
 
     public void setup() {
         this.deck.shuffle();
-        playerDrawTile();  // 抽牌
-        playerFoulHand();  // 補花
+        drawTile();
+        foulHand();
+        sortTile();
     }
 
-    public void playerDrawTile() {
-        /**
-         * 依照東->南->西->北 的玩家進行摸4張牌
-         * 把手排排序好(萬條統東南西北中發白花)
-         */
+    private void sortTile() {
+        // 把手排排序好(萬條統東南西北中發白花)
+        players.forEach(Player::sortTile);
+    }
+
+    private void drawTile() {
+        // 依照東->南->西->北 的玩家進行摸4張牌
         if (players.stream().anyMatch(Player::hasHandTileOrDoorFront)) {
             return;
         }
 
-        for (int i = 0; i < 16; i++) {
-            players.forEach(player -> this.deck.drawTile(player));
+        for (int i = 0; i < 4; i++) {
+            players.forEach(player -> {
+                for (int j = 0; j < 4; j++) {
+                    this.deck.drawTile(player);
+                }
+            });
         }
     }
 
-    private void playerFoulHand() {
+    private void foulHand() {
         /**
          * 進行補花的動作
          * 若摸到花牌，則需等到四位玩家該輪都補花完成，再換自己補花

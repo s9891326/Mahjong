@@ -5,6 +5,7 @@ import lombok.Setter;
 import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -105,6 +106,10 @@ public class Player {
 
     public boolean hasHandTileOrDoorFront() {
         return this.handTile.size() > 0 || this.doorFront.size() > 0;
+    }
+
+    public void sortTile() {
+        handTile.sort(Comparator.comparingInt(Tile::getTilePriority));
     }
 
     @Override
