@@ -30,6 +30,30 @@ public class MahjongGameTest {
     }
 
     @Test
+    void testRoundStart() {
+        /**
+         * 局 TDD
+         * 1. 局開始、局結束
+         * 2. 4位玩家每人手牌有16張麻將,此時牌墩剩餘144-16*4 = 80張麻將
+         */
+        MahjongGame game = new MahjongGame();
+        game.addPlayer(new Player());
+        game.addPlayer(new Player());
+        game.addPlayer(new Player());
+        game.addPlayer(new Player());
+        game.start();
+
+        assertEquals(game.getPlayers().get(0).getHandTile().size(), 16);
+        assertEquals(game.getPlayers().get(1).getHandTile().size(), 16);
+        assertEquals(game.getPlayers().get(2).getHandTile().size(), 16);
+        assertEquals(game.getPlayers().get(3).getHandTile().size(), 16);
+        int allPlayerDoorFront = game.getPlayers().stream()
+                .mapToInt(p -> p.getDoorFront().size())
+                .sum();
+        assertEquals(game.getLastRound().getDeck().getTile().size(), 144 - 64 - allPlayerDoorFront);
+    }
+
+    @Test
     void testFoulHand() {
         // given the arranged deck and four player in game
         MahjongGame game = createGameSample(Arrays.asList(

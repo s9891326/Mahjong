@@ -16,14 +16,27 @@ public class Round {
     public Round(List<Player> playerList) {
         this.players = playerList;
         this.deck = deckFactory();
+        setup();
     }
 
     public void setup() {
         this.deck.shuffle();
+        playerDrawTile();  // 抽牌
+        playerFoulHand();  // 補花
+    }
 
-        // 依照東->南->西->北 的玩家進行摸4張牌
-        // 把手排排序好(萬條統東南西北中發白花)
-        playerFoulHand();
+    public void playerDrawTile() {
+        /**
+         * 依照東->南->西->北 的玩家進行摸4張牌
+         * 把手排排序好(萬條統東南西北中發白花)
+         */
+        if (players.stream().anyMatch(Player::hasHandTileOrDoorFront)) {
+            return;
+        }
+
+        for (int i = 0; i < 16; i++) {
+            players.forEach(player -> this.deck.drawTile(player));
+        }
     }
 
     private void playerFoulHand() {

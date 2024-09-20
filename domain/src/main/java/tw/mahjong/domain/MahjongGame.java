@@ -28,7 +28,6 @@ public class MahjongGame {
 
     private void next_round() {
         rounds.add(new Round(this.players));
-        getLastRound().setup();
     }
 
     public Round getLastRound() {

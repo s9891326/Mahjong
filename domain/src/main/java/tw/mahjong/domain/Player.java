@@ -103,6 +103,10 @@ public class Player {
         return this.handTile.stream().anyMatch(tile -> tile instanceof BonusTile);
     }
 
+    public boolean hasHandTileOrDoorFront() {
+        return this.handTile.size() > 0 || this.doorFront.size() > 0;
+    }
+
     @Override
     public String toString() {
         return "Player{" +
