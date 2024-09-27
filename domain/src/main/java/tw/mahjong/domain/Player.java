@@ -19,7 +19,10 @@ public class Player {
 
     @Getter
     @Setter
-    public String name = "";
+    private String name = "";
+
+    @Getter
+    public int point = 0;
 
     public void addHandTile(Tile tile) {
         this.handTile.add(tile);
@@ -114,8 +117,13 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Player{" +
-                "name='" + name + '\'' +
-                '}';
+        return "Player{" + "name='" + name + '\'' + '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Player otherPlayer = (Player) obj;
+        return name.equals(otherPlayer.getName());
     }
 }
