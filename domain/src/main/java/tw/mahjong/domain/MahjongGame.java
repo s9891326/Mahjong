@@ -36,7 +36,7 @@ public class MahjongGame {
         return rounds.peekLast();
     }
 
-    public Round getLastSecondRound() {
+    public Round getSecondRound() {
         Iterator<Round> iterator = rounds.descendingIterator();
         if (iterator.hasNext()) { // 取得最後一個元素
             iterator.next();
@@ -49,31 +49,12 @@ public class MahjongGame {
     }
 
     public void play(String playerName, Tile tile) {
-        Player turnPlayer = findPlayerByName(playerName);
-        if (turnPlayer != getLastRound().getTurnPlayer()) {
+        Player player = findPlayerByName(playerName);
+        if (player != getLastRound().getTurnPlayer()) {
             throw new MahjongException("Player is not turn player");
         }
 
-        turnPlayer.playTile(tile);
-        findWinner(turnPlayer, tile);
-    }
-
-    private void findWinner(Player turnPlayer, Tile tile) {
-        for (Player player : players) {
-            if (getLastRound().findWinner(player, tile)) {
-                // fixme: 之後根據排型來決定獲得多少point
-                turnPlayer.point -= 1;
-                player.point += 1;
-
-                System.out.println("winner: " + player);
-
-                if (turnPlayer != player) {
-                    dealerIndex += 1;
-                }
-                next_round();
-                return;
-            }
-        }
+        player.playTile(tile);
     }
 
     private Player findPlayerByName(String playerName) {
@@ -81,5 +62,36 @@ public class MahjongGame {
                 .filter(player -> player.getName().equals(playerName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Player not found: " + playerName));
+    }
+
+    public void win(String turnPlayerName, String playerName, Tile tile) {
+        Player turnPlayer = findPlayerByName(turnPlayerName);
+        Player player = findPlayerByName(playerName);
+
+        if (getLastRound().findWinner(player, tile)) {
+            // fixme: 之後根據排型來決定獲得多少point
+            // 自摸(其他玩家都 -point)
+            if (turnPlayer == player) {
+                players.stream().filter(p -> p != turnPlayer).forEach(p -> p.point -= 1);
+            } else {
+                turnPlayer.point -= 1;
+            }
+            player.point += 1;
+
+            System.out.println("winner: " + player);
+
+            if (getLastRound().getDealer() != player) {
+                dealerIndex += 1;
+            }
+            next_round();
+        } else {
+            throw new MahjongException("no winner");
+        }
+    }
+
+    public void drawTile(String playerName) {
+        Player player = findPlayerByName(playerName);
+        getLastRound().deck.drawTile(player);
+        getLastRound().setTurnPlayer(player);
     }
 }

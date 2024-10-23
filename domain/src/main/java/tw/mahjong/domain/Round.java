@@ -20,6 +20,7 @@ public class Round {
     private Player winner;
 
     @Getter
+    @Setter
     private Player turnPlayer;
 
     @Getter
@@ -86,7 +87,9 @@ public class Round {
 
     public boolean findWinner(Player player, Tile tile) {
         List<Tile> tempHandTile = new ArrayList<>(player.getHandTile());
-        tempHandTile.add(tile);
+        if (tile != null) {
+            tempHandTile.add(tile);
+        }
         tempHandTile.sort(Comparator.comparingInt(Tile::getTilePriority));
 
         for (int i = 0; i < tempHandTile.size(); i++) {
