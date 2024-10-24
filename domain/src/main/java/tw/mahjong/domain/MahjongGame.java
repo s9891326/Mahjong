@@ -64,8 +64,8 @@ public class MahjongGame {
                 .orElseThrow(() -> new IllegalArgumentException("Player not found: " + playerName));
     }
 
-    public void win(String turnPlayerName, String playerName, Tile tile) {
-        Player turnPlayer = findPlayerByName(turnPlayerName);
+    public void win(String playerName, Tile tile) {
+        Player turnPlayer = getLastRound().getTurnPlayer();
         Player player = findPlayerByName(playerName);
 
         if (getLastRound().findWinner(player, tile)) {

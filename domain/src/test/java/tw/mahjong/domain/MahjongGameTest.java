@@ -110,7 +110,28 @@ public class MahjongGameTest {
         // when player 1 discard tile
         Tile discardTile = Tile.findTileByName("1條");
         game.play("1", discardTile);
-        game.win("1", "2", discardTile);
+        game.win("2", discardTile);
+
+        assertEquals(game.getRounds().size(), 2);
+        assertEquals(game.getSecondRound().getWinner().getName(), "2");
+        assertEquals(game.getLastRound().getTurnPlayer().getName(), "2");
+        assertEquals(game.getLastRound().getDealer().getName(), "2");
+        assertEquals(game.getPlayers().get(0).getPoint(), -1);
+        assertEquals(game.getPlayers().get(1).getPoint(), 1);
+
+        game = createGameSample(Arrays.asList(
+                Arrays.asList("1條", "1條", "2條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "1筒", "3筒", "東風", "東風", "西風", "西風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "9萬", "北風", "北風", "北風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3萬", "3萬", "4萬", "4萬", "5萬", "6萬", "7萬", "7萬", "紅中", "紅中", "白板", "白板"),
+                Arrays.asList("1條", "1條", "2條", "2條", "3條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "東風", "東風", "西風", "西風")
+        ), Arrays.asList(
+                "3萬", "3筒"
+        ));
+
+        // when player 1 discard tile
+        discardTile = Tile.findTileByName("3萬");
+        game.play("1", discardTile);
+        game.win("2", discardTile);
 
         assertEquals(game.getRounds().size(), 2);
         assertEquals(game.getSecondRound().getWinner().getName(), "2");
@@ -147,7 +168,7 @@ public class MahjongGameTest {
         game.play("1", Tile.findTileByName("3筒"));
         // 玩家抽一張牌
         game.drawTile("2");
-        game.win("2", "2", null);
+        game.win("2", null);
 
         assertEquals(game.getRounds().size(), 2);
         assertEquals(game.getSecondRound().getWinner().getName(), "2");

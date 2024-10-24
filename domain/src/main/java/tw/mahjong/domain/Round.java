@@ -6,7 +6,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Round {
@@ -25,8 +24,6 @@ public class Round {
 
     @Getter
     private Player dealer;
-
-    private static final int TILE_GROUP = 3;
 
     public Round(List<Player> playerList) {
         this.players = playerList;
@@ -98,17 +95,8 @@ public class Round {
             if (i + 1 < tempHandTile.size() && tempHandTile.get(i).equals(tempHandTile.get(i + 1))) {
                 remainingTiles.remove(tempHandTile.get(i));
                 remainingTiles.remove(tempHandTile.get(i + 1));
-                boolean result = true;
 
-                for (int j = 0; j < remainingTiles.size(); j += TILE_GROUP) {
-                    List<Tile> remainTile = remainingTiles.subList(j, Math.min(j + TILE_GROUP, remainingTiles.size()));
-                    result = canFormSets(remainTile);
-
-                    if (!result) {
-                        break;
-                    }
-                }
-                if (result) {
+                if (canFormSets(remainingTiles)) {
                     winner = player;
                     return true;
                 }
@@ -117,36 +105,43 @@ public class Round {
         return false;
     }
 
-    private boolean canFormSets(List<Tile> remainTile) {
-        // 確認三張牌是否為同樣的類型(都是數牌或字牌)
-        if (!areAllSameClass(remainTile)) {
-            return false;
-        }
-
-        // 判斷是否為刻子
-        if (isTriplet(remainTile)) {
+    private boolean canFormSets(List<Tile> tiles) {
+        // 如果沒有牌了，表示順利組成順子或刻子
+        if (tiles.isEmpty()) {
             return true;
         }
 
-        // 判斷是否為順子（僅適用於 SuitTile 類型）
-        if (remainTile.get(0) instanceof SuitTile) {
-            return isSequence(remainTile);
+        // 判斷是否為刻子
+        if (tiles.size() >= 3 && tiles.get(0).equals(tiles.get(1)) && tiles.get(1).equals(tiles.get(2))) {
+            List<Tile> remainingTiles = new ArrayList<>(tiles);
+            remainingTiles.remove(0);
+            remainingTiles.remove(0);
+            remainingTiles.remove(0);
+            return canFormSets(remainingTiles);
         }
 
+        // 判斷是否為順子（僅適用於 SuitTile 類型）
+        if (tiles.get(0) instanceof SuitTile firstTile) {
+            SuitTile secondTile = findSequenceTile(tiles, firstTile.getType(), firstTile.getNumber() + 1);
+            SuitTile thirdTile = findSequenceTile(tiles, firstTile.getType(), firstTile.getNumber() + 2);
+
+            if (secondTile != null && thirdTile != null) {
+                tiles.remove(firstTile);
+                tiles.remove(secondTile);
+                tiles.remove(thirdTile);
+                return canFormSets(tiles);
+            }
+        }
         return false;
     }
 
-    private boolean areAllSameClass(List<Tile> remainTile) {
-        Class<?> firstTileClass = remainTile.get(0).getClass();
-        return remainTile.stream().allMatch(tile -> tile.getClass().equals(firstTileClass));
-    }
-
-    private boolean isTriplet(List<Tile> remainTile) {
-        return Objects.equals(remainTile.get(0), remainTile.get(1)) && Objects.equals(remainTile.get(1), remainTile.get(2));
-    }
-
-    private static boolean isSequence(List<Tile> remainTile) {
-        List<Integer> remainSuitTile = remainTile.stream().map(tile -> ((SuitTile) tile).getNumber()).toList();
-        return remainSuitTile.get(0) + 1 == remainSuitTile.get(1) && remainSuitTile.get(1) + 1 == remainSuitTile.get(2);
+    private SuitTile findSequenceTile(List<Tile> tiles, String type, int number) {
+        // 從牌中找到某個數字的下一張牌
+        for (Tile tile : tiles) {
+            if (tile instanceof SuitTile t && t.getType().equals(type) && t.getNumber() == number) {
+                return t;
+            }
+        }
+        return null;
     }
 }
