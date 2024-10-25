@@ -9,7 +9,6 @@ import java.util.Objects;
 
 @Setter
 public class SuitTile extends Tile implements Cloneable {
-    //    筒（Circle）條（Bamboo）萬（Characters）
     @Getter
     private int number;
     @Getter

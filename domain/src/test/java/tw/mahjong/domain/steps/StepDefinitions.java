@@ -58,9 +58,9 @@ public class StepDefinitions {
         System.out.println("hand tiles:" + player.getHandTile());
     }
 
-    @When("{string} 打了 {string} 自己喊吃")
-    public void chiTile(String otherPlayer, String tile) {
-        player.chi(otherPlayer, Tile.findTileByName(tile), "");
+    @When("上家打了 {string} 自己喊吃")
+    public void chiTile(String tile) {
+        player.chi(Tile.findTileByName(tile));
     }
 
     @Then("吃牌成功")
@@ -118,8 +118,8 @@ public class StepDefinitions {
         }
     }
 
-    @When("{string} 打了 {string} 自己喊吃但其他玩家喊了 {string}")
-    public void chiTileButHappenSomething(String otherPlayer, String tile, String action) {
-        player.chi(otherPlayer, Tile.findTileByName(tile), action);
-    }
+//    @When("{string} 打了 {string} 自己喊吃但其他玩家喊了 {string}")
+//    public void chiTileButHappenSomething(String otherPlayer, String tile, String action) {
+//        player.chi(otherPlayer, Tile.findTileByName(tile), action);
+//    }
 }

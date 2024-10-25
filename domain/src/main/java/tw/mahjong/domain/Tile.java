@@ -4,6 +4,7 @@ package tw.mahjong.domain;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,6 +12,9 @@ public abstract class Tile {
     @Getter
     public String value;
     public static final int QUANTITY = 4;
+    private static final List<String> TILE_ORDER = Arrays.asList(
+            "萬", "條", "筒", "東風", "南風", "西風", "北風", "紅中", "發財", "白板"
+    );
 
     public static Tile findTileByName(String name) {
         String[] parts;
@@ -81,6 +85,19 @@ public abstract class Tile {
         }
 
         return pongOption;
+    }
+
+    public static int getTilePriority(Tile tile) {
+        for (int i = 0; i < TILE_ORDER.size(); i++) {
+            if (tile instanceof SuitTile suitTile) {
+                if (suitTile.getType().equals(TILE_ORDER.get(i))) {
+                    return i * 10 + suitTile.getNumber();
+                }
+            } else if (tile.value.equals(TILE_ORDER.get(i))) {
+                return i * 10;
+            }
+        }
+        return Integer.MAX_VALUE;
     }
 
     public void setTileValue(String value) {

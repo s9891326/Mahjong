@@ -5,8 +5,8 @@ import lombok.Setter;
 import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -18,7 +18,10 @@ public class Player {
 
     @Getter
     @Setter
-    public String name = "";
+    private String name = "";
+
+    @Getter
+    public int point = 0;
 
     public void addHandTile(Tile tile) {
         this.handTile.add(tile);
@@ -40,18 +43,7 @@ public class Player {
         return this.handTile.size() == 17;
     }
 
-    public void chi(String otherPlayer, Tile tile, String action) {
-        if (!otherPlayer.equals("上家")) {
-            System.out.println("只能吃上家打的牌");
-            return;
-        }
-
-        Set<String> validActions = Set.of("碰", "胡", "槓");
-        if (validActions.contains(action)) {
-            System.out.println("其他玩家做了: " + action + "所以不能吃");
-            return;
-        }
-
+    public void chi(Tile tile) {
         if (!(tile instanceof SuitTile suitTile)) {
             System.out.println("只有敘數牌能吃");
             return;
@@ -103,10 +95,23 @@ public class Player {
         return this.handTile.stream().anyMatch(tile -> tile instanceof BonusTile);
     }
 
+    public boolean hasHandTileOrDoorFront() {
+        return this.handTile.size() > 0 || this.doorFront.size() > 0;
+    }
+
+    public void sortTile() {
+        handTile.sort(Comparator.comparingInt(Tile::getTilePriority));
+    }
+
     @Override
     public String toString() {
-        return "Player{" +
-                "name='" + name + '\'' +
-                '}';
+        return "Player{" + "name='" + name + '\'' + '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Player otherPlayer = (Player) obj;
+        return name.equals(otherPlayer.getName());
     }
 }
