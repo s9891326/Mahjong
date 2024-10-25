@@ -94,4 +94,23 @@ public class MahjongGame {
         getLastRound().deck.drawTile(player);
         getLastRound().setTurnPlayer(player);
     }
+
+    public boolean chi(String playerName, Tile tile) {
+        Player player = findPlayerByName(playerName);
+        if (!isTurnPlayerNextPlayer(player)) {
+            return false;
+        }
+
+        player.chi(tile);
+        return true;
+    }
+
+    private boolean isTurnPlayerNextPlayer(Player player) {
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i) == getLastRound().getTurnPlayer()) {
+                return players.get((i + 1) % 4) == player;
+            }
+        }
+        return false;
+    }
 }

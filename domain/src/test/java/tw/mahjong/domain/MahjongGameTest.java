@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mockStatic;
 
 public class MahjongGameTest {
@@ -27,6 +28,34 @@ public class MahjongGameTest {
 
         public void shuffle() {
         }
+    }
+
+    @Test
+    void testChiNextPlayer() {
+        /**
+         * Given
+         * 自己有67萬 123條 456條 789條 3*南風 2*北風
+         * 下家打出5萬
+         * When
+         * 自己喊吃
+         * Then
+         * 吃牌失敗
+         */
+
+        MahjongGame game = createGameSample(Arrays.asList(
+                Arrays.asList("1條", "1條", "2條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "1筒", "3筒", "東風", "東風", "西風", "西風"),
+                Arrays.asList("1萬", "2萬", "3萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "9萬", "2條", "3條", "北風", "北風", "北風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3萬", "3萬", "4萬", "4萬", "5萬", "6萬", "7萬", "7萬", "紅中", "紅中", "白板", "白板"),
+                Arrays.asList("1條", "1條", "2條", "2條", "3條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "東風", "東風", "西風", "西風")
+        ), Arrays.asList(
+                "2筒", "3筒"
+        ));
+
+        Tile discardTile = Tile.findTileByName("1條");
+        game.play("1", discardTile);
+
+        assertFalse(game.chi("4", discardTile));
+        assertEquals(game.getPlayers().get(3).getHandTile().size(), 16);
     }
 
     @Test
