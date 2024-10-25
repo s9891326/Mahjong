@@ -58,7 +58,7 @@ public class StepDefinitions {
         System.out.println("hand tiles:" + player.getHandTile());
     }
 
-    @When("上家打了打了 {string} 自己喊吃")
+    @When("上家打了 {string} 自己喊吃")
     public void chiTile(String tile) {
         player.chi(Tile.findTileByName(tile));
     }
