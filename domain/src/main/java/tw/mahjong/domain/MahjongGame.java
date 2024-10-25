@@ -102,6 +102,7 @@ public class MahjongGame {
         }
 
         player.chi(tile);
+        getLastRound().setTurnPlayer(player);
         return true;
     }
 
@@ -112,5 +113,11 @@ public class MahjongGame {
             }
         }
         return false;
+    }
+
+    public void pong(String playerName, Tile tile) {
+        Player player = findPlayerByName(playerName);
+        player.pong(tile);
+        getLastRound().setTurnPlayer(player);
     }
 }

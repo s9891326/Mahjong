@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
+import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mockStatic;
 
 public class MahjongGameTest {
@@ -56,6 +56,31 @@ public class MahjongGameTest {
 
         assertFalse(game.chi("4", discardTile));
         assertEquals(game.getPlayers().get(3).getHandTile().size(), 16);
+    }
+
+    @Test
+    void testPong() {
+        MahjongGame game = createGameSample(Arrays.asList(
+                Arrays.asList("1條", "1條", "2條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "1筒", "3筒", "東風", "東風", "西風", "西風"),
+                Arrays.asList("1萬", "2萬", "3萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "9萬", "2條", "3條", "北風", "北風", "北風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3萬", "3萬", "4萬", "4萬", "5萬", "6萬", "7萬", "7萬", "紅中", "紅中", "白板", "白板"),
+                Arrays.asList("1條", "1條", "2條", "2條", "3條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "東風", "東風", "西風", "西風")
+        ), Arrays.asList(
+                "2筒", "3筒"
+        ));
+
+        Tile discardTile = Tile.findTileByName("1條");
+        game.play("1", discardTile);
+        game.pong("4", discardTile);
+        game.play("4", Tile.findTileByName("7條"));
+
+        Player fourPlayer = game.getPlayers().get(3);
+        assertEquals(fourPlayer.getHandTile().size(), 13);
+        assertEquals(fourPlayer.getDoorFront().size(), 3);
+        assertEquals(game.getLastRound().getTurnPlayer(), fourPlayer);
+
+        // 沒有對應的排型不能碰
+        assertThrows(MahjongException.class, () -> game.pong("2", discardTile));
     }
 
     @Test

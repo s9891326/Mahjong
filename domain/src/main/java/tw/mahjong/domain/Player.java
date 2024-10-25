@@ -66,8 +66,7 @@ public class Player {
     public void pong(Tile tile) {
         List<Tile> pongOption = Tile.getPongOption(this.handTile, tile);
         if (pongOption.isEmpty()) {
-            System.out.println("沒牌可以碰");
-            return;
+            throw new MahjongException("沒牌可以碰");
         }
 
         for (Tile option : pongOption) {
