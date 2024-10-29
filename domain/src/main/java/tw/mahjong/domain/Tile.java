@@ -2,6 +2,7 @@ package tw.mahjong.domain;
 
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,11 @@ public abstract class Tile {
     private static final List<String> TILE_ORDER = Arrays.asList(
             "萬", "條", "筒", "東風", "南風", "西風", "北風", "紅中", "發財", "白板"
     );
+    private static final int MIN_PONG_QUANTITY = 2;
+    private static final int MIN_KONG_QUANTITY = 4;
+    @Getter
+    @Setter
+    private boolean display = false;
 
     public static Tile findTileByName(String name) {
         String[] parts;
@@ -72,19 +78,26 @@ public abstract class Tile {
     }
 
     public static List<Tile> getPongOption(List<Tile> handTiles, Tile tile) {
-        List<Tile> pongOption = new ArrayList<>();
+        return getTiles(handTiles, tile, MIN_PONG_QUANTITY);
+    }
+
+    public static List<Tile> getKongOption(List<Tile> handTiles, Tile tile) {
+        return getTiles(handTiles, tile, MIN_KONG_QUANTITY);
+    }
+
+    private static List<Tile> getTiles(List<Tile> handTiles, Tile tile, int minQuantity) {
+        List<Tile> option = new ArrayList<>();
 
         for (Tile handTile : handTiles) {
-            if (handTile.equals(tile) && pongOption.size() < 2) {
-                pongOption.add(handTile);
+            if (handTile.equals(tile) && option.size() < minQuantity) {
+                option.add(handTile);
             }
         }
 
-        if (pongOption.size() > 0) {
-            pongOption.add(tile);
+        if (option.size() == minQuantity) {
+            return option;
         }
-
-        return pongOption;
+        return null;
     }
 
     public static int getTilePriority(Tile tile) {

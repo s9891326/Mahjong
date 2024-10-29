@@ -55,6 +55,7 @@ public class MahjongGame {
         }
 
         player.playTile(tile);
+        getLastRound().getDeck().addDiscardTile(tile);
     }
 
     private Player findPlayerByName(String playerName) {
@@ -95,18 +96,18 @@ public class MahjongGame {
         getLastRound().setTurnPlayer(player);
     }
 
-    public boolean chi(String playerName, Tile tile) {
+    public void chi(String playerName) {
         Player player = findPlayerByName(playerName);
-        if (!isTurnPlayerNextPlayer(player)) {
-            return false;
+        if (!isNextPlayer(player)) {
+            throw new MahjongException("只能吃上家的牌");
         }
 
-        player.chi(tile);
+        player.chi(getLastRound().getDeck().getLastDiscardTile());
         getLastRound().setTurnPlayer(player);
-        return true;
+        getLastRound().getDeck().removeLastDiscardTile();
     }
 
-    private boolean isTurnPlayerNextPlayer(Player player) {
+    private boolean isNextPlayer(Player player) {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i) == getLastRound().getTurnPlayer()) {
                 return players.get((i + 1) % 4) == player;
@@ -115,9 +116,28 @@ public class MahjongGame {
         return false;
     }
 
-    public void pong(String playerName, Tile tile) {
+    public void pong(String playerName) {
         Player player = findPlayerByName(playerName);
-        player.pong(tile);
+        player.pong(getLastRound().getDeck().getLastDiscardTile());
+        getLastRound().setTurnPlayer(player);
+        getLastRound().getDeck().removeLastDiscardTile();
+    }
+
+    public void kong(String playerName, Tile tile) {
+        Player player = findPlayerByName(playerName);
+        if (tile != null) {
+            // 暗槓
+            player.kong(tile, false);
+        } else {
+            if (isNextPlayer(player)) {
+                throw new MahjongException("不能槓上家的牌");
+            }
+            player.kong(getLastRound().getDeck().getLastDiscardTile(), true);
+            getLastRound().getDeck().removeLastDiscardTile();
+        }
+
+        // 從牌尾抽牌
+        getLastRound().deck.drawEndOfTile(player);
         getLastRound().setTurnPlayer(player);
     }
 }

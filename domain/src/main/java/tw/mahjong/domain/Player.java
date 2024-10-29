@@ -56,6 +56,7 @@ public class Player {
         }
 
         for (Tile option : chiOption) {
+            option.setDisplay(true);
             if (option != suitTile) {
                 this.handTile.remove(option);
             }
@@ -65,15 +66,35 @@ public class Player {
 
     public void pong(Tile tile) {
         List<Tile> pongOption = Tile.getPongOption(this.handTile, tile);
-        if (pongOption.isEmpty()) {
+        if (pongOption == null) {
             throw new MahjongException("沒牌可以碰");
         }
 
         for (Tile option : pongOption) {
-            if (option != tile) {
-                this.handTile.remove(option);
-            }
+            option.setDisplay(true);
+            this.handTile.remove(option);
             this.doorFront.add(option);
+        }
+        this.doorFront.add(tile);
+    }
+
+    public void kong(Tile tile, boolean isExposedKong) {
+        List<Tile> kongOption = Tile.getKongOption(this.handTile, tile);
+        if (kongOption == null) {
+            throw new MahjongException("沒牌可以槓");
+        }
+
+        for (Tile option : kongOption) {
+            if (isExposedKong) {
+                option.setDisplay(true);
+            }
+            this.handTile.remove(option);
+            this.doorFront.add(option);
+        }
+
+        if (isExposedKong) {
+            tile.setDisplay(true);
+            this.doorFront.add(tile);
         }
     }
 
