@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
+import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mockStatic;
 
 public class MahjongGameTest {
@@ -51,11 +52,35 @@ public class MahjongGameTest {
                 "2筒", "3筒"
         ));
 
-        Tile discardTile = Tile.findTileByName("1條");
-        game.play("1", discardTile);
+        game.play("1", Tile.findTileByName("1條"));
 
-        assertFalse(game.chi("4", discardTile));
+        assertThrows(MahjongException.class, () -> game.chi("4"));
         assertEquals(game.getPlayers().get(3).getHandTile().size(), 16);
+    }
+
+    @Test
+    void testPong() {
+        MahjongGame game = createGameSample(Arrays.asList(
+                Arrays.asList("1條", "1條", "2條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "1筒", "3筒", "東風", "東風", "西風", "西風"),
+                Arrays.asList("1萬", "2萬", "3萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "9萬", "2條", "3條", "北風", "北風", "北風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3萬", "3萬", "4萬", "4萬", "5萬", "6萬", "7萬", "7萬", "紅中", "紅中", "白板", "白板"),
+                Arrays.asList("1條", "1條", "2條", "2條", "3條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "東風", "東風", "西風", "西風")
+        ), Arrays.asList(
+                "2筒", "3筒"
+        ));
+
+        game.play("1", Tile.findTileByName("1條"));
+        // 沒有對應的排型不能碰
+        assertThrows(MahjongException.class, () -> game.pong("2"));
+        game.pong("4");
+        game.play("4", Tile.findTileByName("7條"));
+
+        Player fourPlayer = game.getPlayers().get(3);
+        assertEquals(fourPlayer.getHandTile().size(), 13);
+        assertEquals(fourPlayer.getDoorFront().size(), 3);
+        assertEquals(game.getLastRound().getTurnPlayer(), fourPlayer);
+
+
     }
 
     @Test
@@ -193,7 +218,7 @@ public class MahjongGameTest {
                 "3筒", "1條", "3筒"
         ));
 
-        // 開門
+        // 系統開門，玩家打一張
         game.play("1", Tile.findTileByName("3筒"));
         // 玩家抽一張牌
         game.drawTile("2");
@@ -207,6 +232,155 @@ public class MahjongGameTest {
         assertEquals(game.getPlayers().get(2).getPoint(), -1);
         assertEquals(game.getPlayers().get(3).getPoint(), -1);
         assertEquals(game.getPlayers().get(1).getPoint(), 1);
+    }
+
+    @Test
+    void testExposedKong() {
+        /**
+         * 明槓
+         * Given
+         * 自己🀚🀚🀚
+         * 對家打出 🀚
+         * 沒有玩家要胡 🀚
+         * When
+         * 喊明槓
+         *  Then
+         * 明槓成功
+         * 亮牌🀚🀚🀚🀚（系統）
+         */
+        MahjongGame game = createGameSample(Arrays.asList(
+                Arrays.asList("1萬", "2萬", "3萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "9萬", "2條", "8條", "北風", "北風", "北風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3筒", "3筒", "4筒", "4筒", "5筒", "6筒", "7筒", "7筒", "紅中", "紅中", "白板", "白板"),
+                Arrays.asList("1萬", "2萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "2條", "3條", "東風", "東風", "東風", "西風", "西風"),
+                Arrays.asList("1條", "1條", "2條", "2條", "3條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "南風", "南風", "西風", "西風")
+        ), Arrays.asList(
+                "東風", "1條", "3筒"
+        ));
+
+        Tile tile = Tile.findTileByName("東風");
+        game.play("1", tile);
+        game.kong("3", null);
+        game.play("3", Tile.findTileByName("3筒"));
+
+        Player thirdPlayer = game.getPlayers().get(2);
+        assertEquals(thirdPlayer.getHandTile().size(), 13);
+        assertEquals(thirdPlayer.getDoorFront().size(), 4);
+        assertEquals(thirdPlayer.getDoorFront().stream().filter(Tile::isDisplay).count(), 4);
+        assertEquals(game.getLastRound().getTurnPlayer(), thirdPlayer);
+    }
+
+    @Test
+    void testExposedKongError() {
+        /**
+         * 明槓失敗
+         * Given
+         * 自己🀌🀌🀌
+         * 上家打出🀌
+         * When
+         * 喊明槓
+         *  Then
+         * 明槓失敗
+         */
+        MahjongGame game = createGameSample(Arrays.asList(
+                Arrays.asList("1萬", "2萬", "3萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "9萬", "2條", "8條", "北風", "北風", "北風"),
+                Arrays.asList("1萬", "2萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "2條", "3條", "東風", "東風", "東風", "西風", "西風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3筒", "3筒", "4筒", "4筒", "5筒", "6筒", "7筒", "7筒", "紅中", "紅中", "白板", "白板"),
+                Arrays.asList("1條", "1條", "2條", "2條", "3條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "南風", "南風", "西風", "西風")
+        ), Arrays.asList(
+                "東風", "1條", "3筒"
+        ));
+
+        Tile tile = Tile.findTileByName("東風");
+        game.play("1", tile);
+        assertThrows(MahjongException.class, () -> game.kong("2", null));
+
+        Player secondPlayer = game.getPlayers().get(1);
+        assertEquals(secondPlayer.getHandTile().size(), 16);
+        assertEquals(secondPlayer.getDoorFront().size(), 0);
+        assertEquals(game.getLastRound().getTurnPlayer(), game.getPlayers().get(0));
+    }
+
+    @Test
+    void testConcealedKong() {
+        /**
+         * 暗槓
+         * Given
+         * 自己🀗🀗🀗
+         * 系統發牌 🀗
+         * When
+         * 喊暗槓
+         *  Then
+         * 暗槓成功
+         * 蓋住🀗🀗🀗🀗(系統)
+         */
+        MahjongGame game = createGameSample(Arrays.asList(
+                Arrays.asList("1萬", "2萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "2條", "3條", "東風", "東風", "東風", "西風", "西風"),
+                Arrays.asList("1萬", "2萬", "3萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "9萬", "2條", "8條", "北風", "北風", "北風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3筒", "3筒", "4筒", "4筒", "5筒", "6筒", "7筒", "7筒", "紅中", "紅中", "白板", "白板"),
+                Arrays.asList("1條", "1條", "2條", "2條", "3條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "南風", "南風", "西風", "西風")
+        ), Arrays.asList(
+                "東風", "1條", "3筒"
+        ));
+
+        game.kong("1", Tile.findTileByName("東風"));
+        game.play("1", Tile.findTileByName("3筒"));
+
+        Player firstPlayer = game.getPlayers().get(0);
+        assertEquals(firstPlayer.getHandTile().size(), 13);
+        assertEquals(firstPlayer.getDoorFront().size(), 4);
+        assertEquals(firstPlayer.getDoorFront().stream().filter(t -> !t.isDisplay()).count(), 4);
+        assertEquals(game.getLastRound().getTurnPlayer(), firstPlayer);
+    }
+
+    @Test
+    void testMendingKong() {
+        /**
+         * 補槓
+         * Given
+         * 自己已經外部有碰🀛
+         * 摸到🀛
+         * When
+         * 喊槓
+         * Then
+         * 補槓成功
+         */
+        MahjongGame game = createGameSample(Arrays.asList(
+                Arrays.asList("1萬", "2萬", "3萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "9萬", "2條", "8條", "北風", "北風", "北風"),
+                Arrays.asList("1萬", "2萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "2條", "3條", "東風", "東風", "東風", "西風", "西風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3筒", "3筒", "4筒", "4筒", "5筒", "6筒", "7筒", "7筒", "紅中", "紅中", "白板", "白板"),
+                Arrays.asList("1條", "1條", "2條", "2條", "3條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "南風", "南風", "發財", "發財")
+        ), Arrays.asList(
+                "西風", "5條", "5條", "6條", "西風", "3筒"
+        ));
+
+        game.play("1", Tile.findTileByName("西風"));
+
+        game.pong("2");
+        game.play("2", Tile.findTileByName("2條"));
+
+        game.drawTile("3");
+        game.play("3", Tile.findTileByName("5條"));
+
+        game.drawTile("4");
+        game.play("4", Tile.findTileByName("5條"));
+
+        game.drawTile("1");
+        game.play("1", Tile.findTileByName("6條"));
+
+        game.drawTile("2");
+        // 補槓
+        game.kong("2", Tile.findTileByName("西風"));
+        game.play("2", Tile.findTileByName("3筒"));
+
+        assertEquals(game.getPlayers().get(0).getHandTile().size(), 16);
+        assertEquals(game.getPlayers().get(1).getHandTile().size(), 13);
+        assertEquals(game.getPlayers().get(2).getHandTile().size(), 16);
+        assertEquals(game.getPlayers().get(3).getHandTile().size(), 16);
+
+        Player secondPlayer = game.getPlayers().get(1);
+        assertEquals(secondPlayer.getDoorFront().size(), 4);
+        assertEquals(secondPlayer.getDoorFront().stream().filter(Tile::isDisplay).count(), 4);
+        assertEquals(game.getLastRound().getTurnPlayer(), secondPlayer);
     }
 
     private void assertHandTiles(Player player, List<String> expectedTiles) {

@@ -24,23 +24,23 @@ public class Player {
     public int point = 0;
 
     public void addHandTile(Tile tile) {
-        this.handTile.add(tile);
+        handTile.add(tile);
     }
 
     public void playTile(Tile tile) throws MahjongException {
-        if (this.handTile.contains(tile)) {
-            this.handTile.remove(tile);
+        if (handTile.contains(tile)) {
+            handTile.remove(tile);
         } else {
             throw new MahjongException("沒這張卡");
         }
     }
 
     public boolean isSuccessPlayTile() {
-        return this.handTile.size() == 16;
+        return handTile.size() == 16;
     }
 
     public boolean isSuccessDrawTile() {
-        return this.handTile.size() == 17;
+        return handTile.size() == 17;
     }
 
     public void chi(Tile tile) {
@@ -49,40 +49,70 @@ public class Player {
             return;
         }
 
-        List<Tile> chiOption = Tile.getChiOption(this.handTile, suitTile);
+        List<Tile> chiOption = Tile.getChiOption(handTile, suitTile);
         if (chiOption.isEmpty()) {
             System.out.println("沒牌可以吃");
             return;
         }
 
         for (Tile option : chiOption) {
+            option.setDisplay(true);
             if (option != suitTile) {
-                this.handTile.remove(option);
+                handTile.remove(option);
             }
-            this.doorFront.add(option);
+            doorFront.add(option);
         }
     }
 
     public void pong(Tile tile) {
-        List<Tile> pongOption = Tile.getPongOption(this.handTile, tile);
-        if (pongOption.isEmpty()) {
-            System.out.println("沒牌可以碰");
-            return;
+        List<Tile> pongOption = Tile.getPongOption(handTile, tile);
+        if (pongOption == null) {
+            throw new MahjongException("沒牌可以碰");
         }
 
         for (Tile option : pongOption) {
-            if (option != tile) {
-                this.handTile.remove(option);
+            option.setDisplay(true);
+            handTile.remove(option);
+            doorFront.add(option);
+        }
+        tile.setDisplay(true);
+        doorFront.add(tile);
+    }
+
+    public void kong(Tile tile, boolean isExposedKong) {
+        List<Tile> kongOption = Tile.getKongOption(handTile, tile);
+        List<Tile> mendKongOption = Tile.getKongOption(doorFront, tile);
+        if (kongOption == null && mendKongOption == null) {
+            throw new MahjongException("沒牌可以槓");
+        }
+
+        if (mendKongOption != null) {
+            Tile mendKong = mendKongOption.get(0);
+            mendKong.setDisplay(true);
+            handTile.remove(mendKong);
+            doorFront.add(mendKong);
+            return;
+        }
+
+        for (Tile option : kongOption) {
+            if (isExposedKong) {
+                option.setDisplay(true);
             }
-            this.doorFront.add(option);
+            handTile.remove(option);
+            doorFront.add(option);
+        }
+
+        if (isExposedKong) {
+            tile.setDisplay(true);
+            doorFront.add(tile);
         }
     }
 
     public AtomicInteger foulHand() {
         AtomicInteger foulHandNum = new AtomicInteger(0);
-        this.handTile.removeIf(tile -> {
+        handTile.removeIf(tile -> {
             if (tile instanceof BonusTile) {
-                this.doorFront.add(tile);
+                doorFront.add(tile);
                 foulHandNum.getAndIncrement();
                 return true;
             }
@@ -92,11 +122,11 @@ public class Player {
     }
 
     public boolean hasBonusTile() {
-        return this.handTile.stream().anyMatch(tile -> tile instanceof BonusTile);
+        return handTile.stream().anyMatch(tile -> tile instanceof BonusTile);
     }
 
     public boolean hasHandTileOrDoorFront() {
-        return this.handTile.size() > 0 || this.doorFront.size() > 0;
+        return handTile.size() > 0 || doorFront.size() > 0;
     }
 
     public void sortTile() {

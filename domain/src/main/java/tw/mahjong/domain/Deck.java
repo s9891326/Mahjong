@@ -13,6 +13,9 @@ public class Deck {
     @Getter
     public List<Tile> tile;
 
+    @Getter
+    public List<Tile> discardTile = new ArrayList<>();
+
     private final Map<List<String>, Function<String, Tile>> tileFactoriesByType = Map.of(DragonTile.typeName, DragonTile::new, WindsTile.typeName, WindsTile::new);
 
     public void shuffle() {
@@ -47,5 +50,21 @@ public class Deck {
         }
 
         player.addHandTile(this.getTile().remove(0));
+    }
+
+    public void drawEndOfTile(Player player) {
+        player.addHandTile(this.getTile().remove(this.getTile().size() - 1));
+    }
+
+    public void addDiscardTile(Tile tile) {
+        discardTile.add(tile);
+    }
+
+    public Tile getLastDiscardTile() {
+        return discardTile.get(discardTile.size() - 1);
+    }
+
+    public void removeLastDiscardTile() {
+        discardTile.remove(discardTile.size() - 1);
     }
 }
