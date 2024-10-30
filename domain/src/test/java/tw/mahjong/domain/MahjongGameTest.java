@@ -332,6 +332,57 @@ public class MahjongGameTest {
         assertEquals(game.getLastRound().getTurnPlayer(), firstPlayer);
     }
 
+    @Test
+    void testMendingKong() {
+        /**
+         * 補槓
+         * Given
+         * 自己已經外部有碰🀛
+         * 摸到🀛
+         * When
+         * 喊槓
+         * Then
+         * 補槓成功
+         */
+        MahjongGame game = createGameSample(Arrays.asList(
+                Arrays.asList("1萬", "2萬", "3萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "9萬", "2條", "8條", "北風", "北風", "北風"),
+                Arrays.asList("1萬", "2萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬", "2條", "3條", "東風", "東風", "東風", "西風", "西風"),
+                Arrays.asList("1萬", "1萬", "2萬", "2萬", "3筒", "3筒", "4筒", "4筒", "5筒", "6筒", "7筒", "7筒", "紅中", "紅中", "白板", "白板"),
+                Arrays.asList("1條", "1條", "2條", "2條", "3條", "3條", "4條", "4條", "5條", "6條", "7條", "7條", "南風", "南風", "發財", "發財")
+        ), Arrays.asList(
+                "西風", "5條", "5條", "6條", "西風", "3筒"
+        ));
+
+        game.play("1", Tile.findTileByName("西風"));
+
+        game.pong("2");
+        game.play("2", Tile.findTileByName("2條"));
+
+        game.drawTile("3");
+        game.play("3", Tile.findTileByName("5條"));
+
+        game.drawTile("4");
+        game.play("4", Tile.findTileByName("5條"));
+
+        game.drawTile("1");
+        game.play("1", Tile.findTileByName("6條"));
+
+        game.drawTile("2");
+        // 補槓
+        game.kong("2", Tile.findTileByName("西風"));
+        game.play("2", Tile.findTileByName("3筒"));
+
+        assertEquals(game.getPlayers().get(0).getHandTile().size(), 16);
+        assertEquals(game.getPlayers().get(1).getHandTile().size(), 13);
+        assertEquals(game.getPlayers().get(2).getHandTile().size(), 16);
+        assertEquals(game.getPlayers().get(3).getHandTile().size(), 16);
+
+        Player secondPlayer = game.getPlayers().get(1);
+        assertEquals(secondPlayer.getDoorFront().size(), 4);
+        assertEquals(secondPlayer.getDoorFront().stream().filter(Tile::isDisplay).count(), 4);
+        assertEquals(game.getLastRound().getTurnPlayer(), secondPlayer);
+    }
+
     private void assertHandTiles(Player player, List<String> expectedTiles) {
         for (int i = 0; i < player.getHandTile().size(); i++) {
             assertEquals(player.getHandTile().get(i), Tile.findTileByName(expectedTiles.get(i)));

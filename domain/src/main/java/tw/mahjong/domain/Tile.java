@@ -17,7 +17,9 @@ public abstract class Tile {
             "萬", "條", "筒", "東風", "南風", "西風", "北風", "紅中", "發財", "白板"
     );
     private static final int MIN_PONG_QUANTITY = 2;
-    private static final int MIN_KONG_QUANTITY = 4;
+    private static final int MIN_KONG_QUANTITY = 3;
+    private static final int MAX_KONG_QUANTITY = 4;
+
     @Getter
     @Setter
     private boolean display = false;
@@ -77,24 +79,24 @@ public abstract class Tile {
         return chiOption;
     }
 
-    public static List<Tile> getPongOption(List<Tile> handTiles, Tile tile) {
-        return getTiles(handTiles, tile, MIN_PONG_QUANTITY);
+    public static List<Tile> getPongOption(List<Tile> tiles, Tile tileOption) {
+        return getTilesOption(tiles, tileOption, MIN_PONG_QUANTITY, MIN_PONG_QUANTITY);
     }
 
-    public static List<Tile> getKongOption(List<Tile> handTiles, Tile tile) {
-        return getTiles(handTiles, tile, MIN_KONG_QUANTITY);
+    public static List<Tile> getKongOption(List<Tile> tiles, Tile tileOption) {
+        return getTilesOption(tiles, tileOption, MIN_KONG_QUANTITY, MAX_KONG_QUANTITY);
     }
 
-    private static List<Tile> getTiles(List<Tile> handTiles, Tile tile, int minQuantity) {
+    private static List<Tile> getTilesOption(List<Tile> tiles, Tile tileOption, int minQuantity, int maxQuantity) {
         List<Tile> option = new ArrayList<>();
 
-        for (Tile handTile : handTiles) {
-            if (handTile.equals(tile) && option.size() < minQuantity) {
-                option.add(handTile);
+        for (Tile tile : tiles) {
+            if (tile.equals(tileOption) && option.size() < minQuantity) {
+                option.add(tile);
             }
         }
 
-        if (option.size() == minQuantity) {
+        if (minQuantity <= option.size() && option.size() <= maxQuantity) {
             return option;
         }
         return null;
