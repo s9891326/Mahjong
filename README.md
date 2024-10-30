@@ -34,3 +34,8 @@
 - TDD -- 測試驅動開發，先寫測試再開發。
 - MVC -- 三層式架構
 - Clean Architecture -- 乾淨架構
+
+## Maven
+
+- 修正module沒有正常載入對應的package，如果配置是正確的，能用下面的語法來重新下載，不使用緩存的
+  `mvn clean install -U`

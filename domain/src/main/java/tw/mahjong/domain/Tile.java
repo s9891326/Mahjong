@@ -91,7 +91,7 @@ public abstract class Tile {
         List<Tile> option = new ArrayList<>();
 
         for (Tile tile : tiles) {
-            if (tile.equals(tileOption) && option.size() < minQuantity) {
+            if (tile.equals(tileOption) && option.size() < maxQuantity) {
                 option.add(tile);
             }
         }
