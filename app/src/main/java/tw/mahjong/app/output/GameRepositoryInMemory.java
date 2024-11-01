@@ -4,9 +4,6 @@ import tw.mahjong.domain.MahjongGame;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
 
 public class GameRepositoryInMemory implements Repository {
     private final Map<String, MahjongGame> inMemoryData = new HashMap<>();
@@ -17,7 +14,7 @@ public class GameRepositoryInMemory implements Repository {
     }
 
     @Override
-    public Optional<MahjongGame> get(String gameId) {
-        return ofNullable(inMemoryData.get(gameId));
+    public MahjongGame get(String gameId) {
+        return inMemoryData.get(gameId);
     }
 }

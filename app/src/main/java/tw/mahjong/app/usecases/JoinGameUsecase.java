@@ -11,16 +11,18 @@ import tw.mahjong.domain.events.DomainEvent;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class CreateGameUsecase {
+public class JoinGameUsecase {
     private final Repository repository;
 
-    public CreateGameInput input(String playerName) {
-        return new CreateGameInput(playerName);
+    public JoinGameInput input(String gameId, String playerName) {
+        return new JoinGameInput(gameId, playerName);
     }
 
-    public void execute(CreateGameInput input, Presenter presenter) {
-        // 查改存推
-        MahjongGame game = new MahjongGame();
+    public void execute(JoinGameInput input, Presenter presenter) {
+        // 查
+        MahjongGame game = repository.get(input.gameId);
+
+        // 改
         Player player = new Player();
         player.setName(input.playerName);
         List<DomainEvent> events = game.join(player);
@@ -33,7 +35,8 @@ public class CreateGameUsecase {
     }
 
     @AllArgsConstructor
-    static class CreateGameInput {
+    static class JoinGameInput {
+        private String gameId;
         private String playerName;
     }
 }

@@ -4,8 +4,10 @@ import org.junit.jupiter.api.Test;
 import tw.mahjong.app.output.Common;
 import tw.mahjong.app.output.Repository;
 import tw.mahjong.app.presenter.CreateGamePresenter;
+import tw.mahjong.app.presenter.JoinGamePresenter;
 import tw.mahjong.app.presenter.Presenter;
 import tw.mahjong.app.usecases.CreateGameUsecase;
+import tw.mahjong.app.usecases.JoinGameUsecase;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,8 +31,10 @@ public class GameUseCaseTest {
 //    }
 
     private boolean joinGame(String gameId) {
-
-        return false;
+        JoinGameUsecase joinGameUsecase = new JoinGameUsecase(repository);
+        Presenter presenter = new JoinGamePresenter();
+        joinGameUsecase.execute(joinGameUsecase.input(gameId, "1"), presenter);
+        return (boolean) presenter.asBotModel();
     }
 
     private String createGame() {
