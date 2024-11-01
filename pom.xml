@@ -12,6 +12,7 @@
         <module>web</module>
         <module>app</module>
         <module>domain</module>
+        <module>discord</module>
     </modules>
 
     <properties>

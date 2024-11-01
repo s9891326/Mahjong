@@ -1,11 +1,15 @@
 package tw.mahjong.domain;
 
 import lombok.Getter;
+import tw.mahjong.domain.events.DomainEvent;
+import tw.mahjong.domain.events.JoinEvent;
 import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.*;
 
 public class MahjongGame {
+    @Getter
+    private final String id = String.valueOf(UUID.randomUUID());
     public static final int PLAYER_NUMS = 4;
     @Getter
     private final List<Player> players = new ArrayList<>();
@@ -14,8 +18,10 @@ public class MahjongGame {
 
     private int dealerIndex = 0;
 
-    public void addPlayer(Player player) {
+    public List<DomainEvent> join(Player player) {
+        // todo: game has started but someone want to join this game
         this.players.add(player);
+        return List.of(new JoinEvent(id, true));
     }
 
     public void start() {

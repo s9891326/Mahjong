@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>tw.mahjong</groupId>
         <artifactId>parent</artifactId>
@@ -11,22 +10,19 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>app</artifactId>
-    <version>0.0.1</version>
-    <packaging>jar</packaging>
+    <artifactId>discord</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <dependency>
-            <groupId>tw.mahjong</groupId>
-            <artifactId>domain</artifactId>
-            <version>0.0.1</version>
-            <scope>compile</scope>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>5.0.2</version>
         </dependency>
     </dependencies>
-
 </project>

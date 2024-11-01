@@ -91,10 +91,10 @@ public class MahjongGameTest {
          * 2. 4位玩家每人手牌有16張麻將,此時牌墩剩餘144-16*4 = 80張麻將
          */
         MahjongGame game = new MahjongGame();
-        game.addPlayer(new Player());
-        game.addPlayer(new Player());
-        game.addPlayer(new Player());
-        game.addPlayer(new Player());
+        game.join(new Player());
+        game.join(new Player());
+        game.join(new Player());
+        game.join(new Player());
         game.start();
 
         assertEquals(game.getPlayers().get(0).getHandTile().size(), 17);
@@ -413,7 +413,7 @@ public class MahjongGameTest {
                     }).toList();
 
             for (Player player : players) {
-                game.addPlayer(player);
+                game.join(player);
             }
 
             // when start the arranged game
