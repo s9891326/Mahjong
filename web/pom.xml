@@ -62,7 +62,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!--                <configuration>-->
-                <!--                    <mainClass>tw.mahjong.web.MahjongApplication</mainClass>-->
+                <!--                    <mainClass>web.tw.mahjong.domain.MahjongApplication</mainClass>-->
                 <!--                </configuration>-->
             </plugin>
             <plugin>

@@ -1,13 +1,13 @@
-package tw.mahjong.app;
+package tw.mahjong.discord;
 
 import org.junit.jupiter.api.Test;
 import tw.mahjong.app.output.Common;
 import tw.mahjong.app.output.Repository;
-import tw.mahjong.app.presenter.CreateGamePresenter;
-import tw.mahjong.app.presenter.JoinGamePresenter;
 import tw.mahjong.app.presenter.Presenter;
 import tw.mahjong.app.usecases.CreateGameUsecase;
 import tw.mahjong.app.usecases.JoinGameUsecase;
+import tw.mahjong.discord.presenter.CreateGamePresenter;
+import tw.mahjong.discord.presenter.JoinGamePresenter;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,7 +19,7 @@ public class GameUseCaseTest {
     @Test
     void testCreateAndJoinGame() {
         String gameId = createGame();
-        System.out.println(gameId);
+        System.out.println("discord: " + gameId);
         assertNotNull(gameId);
 
         assertTrue(joinGame(gameId));

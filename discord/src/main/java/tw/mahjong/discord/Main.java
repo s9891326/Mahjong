@@ -1,4 +1,4 @@
-package tw.mahjong;
+package tw.mahjong.discord;
 
 public class Main {
     public static void main(String[] args) {
