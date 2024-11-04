@@ -7,9 +7,11 @@ import tw.mahjong.app.output.Repository;
 import tw.mahjong.app.usecases.CreateGameUsecase;
 import tw.mahjong.app.usecases.GetStatusUsecase;
 import tw.mahjong.app.usecases.JoinGameUsecase;
+import tw.mahjong.app.usecases.StartGameUsecase;
 import tw.mahjong.discord.presenter.CreateGamePresenter;
 import tw.mahjong.discord.presenter.GetStatusPresenter;
 import tw.mahjong.discord.presenter.JoinGamePresenter;
+import tw.mahjong.discord.presenter.StartGamePresenter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,12 +34,16 @@ public class GameUseCaseTest {
         GetStatusPresenter.GetStatusBotModel botModel = get_status(gameId, "1");
         System.out.println(botModel.gameId + botModel.handTile + botModel.doorFront);
         assertEquals(botModel.gameId, gameId);
-
+//        assertEquals(botModel.handTile.size(), 17);
+//        assertEquals(botModel.turnPlayer.getName(), "1");
     }
 
     private boolean startGame(String gameId) {
+        StartGameUsecase startGameUsecase = new StartGameUsecase(repository);
+        Presenter presenter = new StartGamePresenter();
+        startGameUsecase.execute(startGameUsecase.input(gameId), presenter);
+        return (boolean) presenter.asBotModel();
 
-        return false;
     }
 
     private GetStatusPresenter.GetStatusBotModel get_status(String gameId, String playerName) {

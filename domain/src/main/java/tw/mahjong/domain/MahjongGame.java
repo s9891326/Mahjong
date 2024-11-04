@@ -3,6 +3,7 @@ package tw.mahjong.domain;
 import lombok.Getter;
 import tw.mahjong.domain.events.DomainEvent;
 import tw.mahjong.domain.events.JoinEvent;
+import tw.mahjong.domain.events.StartGameEvent;
 import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.*;
@@ -24,12 +25,13 @@ public class MahjongGame {
         return List.of(new JoinEvent(id, true));
     }
 
-    public void start() {
+    public List<DomainEvent> start() {
         // todo: 玩家抓位子並依照東南西北把玩家排序
         if (this.players.size() < PLAYER_NUMS) {
             throw new MahjongException("遊玩人數不足4人");
         }
         next_round();
+        return List.of(new StartGameEvent(true));
     }
 
     private void next_round() {
