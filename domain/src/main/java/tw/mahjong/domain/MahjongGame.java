@@ -64,7 +64,7 @@ public class MahjongGame {
         getLastRound().getDeck().addDiscardTile(tile);
     }
 
-    private Player findPlayerByName(String playerName) {
+    public Player findPlayerByName(String playerName) {
         return players.stream()
                 .filter(player -> player.getName().equals(playerName))
                 .findFirst()

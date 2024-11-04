@@ -1,6 +1,6 @@
 package tw.mahjong.discord.presenter;
 
-import tw.mahjong.app.presenter.Presenter;
+import tw.mahjong.app.Presenter;
 import tw.mahjong.domain.events.DomainEvent;
 import tw.mahjong.domain.events.JoinEvent;
 

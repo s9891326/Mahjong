@@ -1,4 +1,4 @@
-package tw.mahjong.app.presenter;
+package tw.mahjong.app;
 
 import tw.mahjong.domain.events.DomainEvent;
 
@@ -9,6 +9,10 @@ public abstract class Presenter {
     public abstract void present(List<DomainEvent> events);
 
     public abstract Object asBotModel();
+
+    public Object asBotModel(Object object) {
+        return null;
+    }
 
     @SuppressWarnings("unchecked")
     protected static <T extends DomainEvent> Optional<T> getEvent(List<DomainEvent> events,
