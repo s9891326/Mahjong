@@ -10,7 +10,7 @@ import tw.mahjong.domain.events.GameStatusEvent;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class GameStatusUsecase {
+public class GetStatusUsecase {
     private final Repository repository;
 
     public GameStatusInput input(String gameId, String playerName) {

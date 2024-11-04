@@ -9,7 +9,7 @@ import tw.mahjong.domain.events.GameStatusEvent;
 
 import java.util.List;
 
-public class GameStatusPresenter extends Presenter {
+public class GetStatusPresenter extends Presenter {
     private GameStatusEvent event;
 
     @Override
@@ -26,11 +26,11 @@ public class GameStatusPresenter extends Presenter {
     public Object asBotModel(Object object) {
         String playerName = object.toString();
         Player player = event.game.findPlayerByName(playerName);
-        return new GameStatusBotModel(event.game.getId(), player.getHandTile(), player.getDoorFront());
+        return new GetStatusBotModel(event.game.getId(), player.getHandTile(), player.getDoorFront());
     }
 
     @AllArgsConstructor
-    public static class GameStatusBotModel {
+    public static class GetStatusBotModel {
         public String gameId;
         public List<Tile> handTile;
         public List<Tile> doorFront;
