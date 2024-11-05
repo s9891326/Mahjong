@@ -13,7 +13,9 @@ public class Round {
     @Setter
     public Deck deck;
 
-    public List<Player> players;
+    @Getter
+    @Setter
+    private List<Player> players;
 
     @Getter
     private Player winner;

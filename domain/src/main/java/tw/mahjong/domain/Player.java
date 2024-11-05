@@ -12,7 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Player {
     @Getter
-    private final List<Tile> handTile = new ArrayList<>();
+    @Setter
+    private List<Tile> handTile = new ArrayList<>();
     @Getter
     private final List<Tile> doorFront = new ArrayList<>();
 

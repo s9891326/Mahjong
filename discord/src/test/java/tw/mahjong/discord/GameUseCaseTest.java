@@ -12,6 +12,8 @@ import tw.mahjong.discord.presenter.CreateGamePresenter;
 import tw.mahjong.discord.presenter.GetStatusPresenter;
 import tw.mahjong.discord.presenter.JoinGamePresenter;
 import tw.mahjong.discord.presenter.StartGamePresenter;
+import tw.mahjong.domain.Player;
+import tw.mahjong.domain.Round;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,11 +33,20 @@ public class GameUseCaseTest {
 
         assertTrue(startGame(gameId));
 
-        GetStatusPresenter.GetStatusBotModel botModel = get_status(gameId, "1");
-        System.out.println(botModel.gameId + botModel.handTile + botModel.doorFront);
-        assertEquals(botModel.gameId, gameId);
-//        assertEquals(botModel.handTile.size(), 17);
-//        assertEquals(botModel.turnPlayer.getName(), "1");
+        GetStatusPresenter.GetStatusBotModel botModel1 = get_status(gameId, "1");
+        System.out.println(botModel1.getGameId() + botModel1.getHandTile() + botModel1.getDoorFront());
+        assertEquals(botModel1.getGameId(), gameId);
+        assertEquals(botModel1.getHandTile().size(), 17);
+        checkEveryoneHandTileSize(botModel1.getLastRound());
+
+        GetStatusPresenter.GetStatusBotModel botModel2 = get_status(gameId, "2");
+        checkEveryoneHandTileSize(botModel2.getLastRound());
+    }
+
+    private void checkEveryoneHandTileSize(Round lastRound) {
+        for (Player player : lastRound.getPlayers()) {
+            assertTrue(player.getHandTile().size() >= 16);
+        }
     }
 
     private boolean startGame(String gameId) {
