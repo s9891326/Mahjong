@@ -1,4 +1,4 @@
-package tw.mahjong.app.output;
+package tw.mahjong.app.repository;
 
 import tw.mahjong.domain.MahjongGame;
 

@@ -2,8 +2,7 @@ package tw.mahjong.discord;
 
 import org.junit.jupiter.api.Test;
 import tw.mahjong.app.Presenter;
-import tw.mahjong.app.output.Common;
-import tw.mahjong.app.output.Repository;
+import tw.mahjong.app.repository.Repository;
 import tw.mahjong.app.usecases.CreateGameUsecase;
 import tw.mahjong.app.usecases.GetStatusUsecase;
 import tw.mahjong.app.usecases.JoinGameUsecase;
@@ -12,6 +11,7 @@ import tw.mahjong.discord.presenter.CreateGamePresenter;
 import tw.mahjong.discord.presenter.GetStatusPresenter;
 import tw.mahjong.discord.presenter.JoinGamePresenter;
 import tw.mahjong.discord.presenter.StartGamePresenter;
+import tw.mahjong.discord.repository.Common;
 import tw.mahjong.domain.Player;
 import tw.mahjong.domain.Round;
 
@@ -54,7 +54,6 @@ public class GameUseCaseTest {
         Presenter presenter = new StartGamePresenter();
         startGameUsecase.execute(startGameUsecase.input(gameId), presenter);
         return (boolean) presenter.asBotModel();
-
     }
 
     private GetStatusPresenter.GetStatusBotModel get_status(String gameId, String playerName) {

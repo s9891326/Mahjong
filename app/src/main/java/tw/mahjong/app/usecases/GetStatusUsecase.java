@@ -3,7 +3,7 @@ package tw.mahjong.app.usecases;
 import lombok.RequiredArgsConstructor;
 import tw.mahjong.app.Presenter;
 import tw.mahjong.app.input.GameStatusInput;
-import tw.mahjong.app.output.Repository;
+import tw.mahjong.app.repository.Repository;
 import tw.mahjong.domain.MahjongGame;
 import tw.mahjong.domain.events.GameStatusEvent;
 

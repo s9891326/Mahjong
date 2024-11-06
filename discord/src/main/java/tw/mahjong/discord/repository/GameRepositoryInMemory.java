@@ -1,5 +1,6 @@
-package tw.mahjong.app.output;
+package tw.mahjong.discord.repository;
 
+import tw.mahjong.app.repository.Repository;
 import tw.mahjong.domain.MahjongGame;
 
 import java.util.HashMap;

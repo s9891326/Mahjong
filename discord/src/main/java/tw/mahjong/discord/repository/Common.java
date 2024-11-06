@@ -1,4 +1,6 @@
-package tw.mahjong.app.output;
+package tw.mahjong.discord.repository;
+
+import tw.mahjong.app.repository.Repository;
 
 public class Common {
     public static Repository getRepository() {
