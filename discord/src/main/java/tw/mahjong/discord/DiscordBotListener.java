@@ -1,6 +1,7 @@
-package tw.mahjong.discord.listener;
+package tw.mahjong.discord;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
@@ -10,14 +11,15 @@ import tw.mahjong.discord.repository.Common;
 import tw.mahjong.domain.exceptions.MahjongException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
-public class BotListener extends ListenerAdapter {
-    private Map<String, String> userWithGameId = new HashMap<>();
+public class DiscordBotListener extends ListenerAdapter {
     private final CommandHandlerFactory commandHandlerFactory;
 
-    public BotListener() {
+    public DiscordBotListener() {
+        Map<String, String> userWithGameId = new HashMap<>();
         commandHandlerFactory = new CommandHandlerFactory(Common.getRepository(), userWithGameId);
     }
 
@@ -26,6 +28,14 @@ public class BotListener extends ListenerAdapter {
         CommandHandler handler = commandHandlerFactory.getHandler(event.getName());
         try {
             handler.handle(event);
+
+            // 為了方便測試
+            if (event.getName().equals("create")) {
+                handler = commandHandlerFactory.getHandler("join");
+                for (int i = 0; i < 3; i++) {
+                    handler.handle(event);
+                }
+            }
         } catch (MahjongException mahjongException) {
             event.reply(mahjongException.getMessage()).queue();
         }
@@ -61,4 +71,18 @@ public class BotListener extends ListenerAdapter {
 //                    .queue();
 //        }
 //    }
+
+    private final List<String> handTiles = List.of("1萬", "2萬", "3萬", "4萬", "5萬", "6萬", "7萬", "8萬", "9萬");
+
+    @Override
+    public void onButtonInteraction(ButtonInteractionEvent event) {
+        String tileName = event.getButton().getId();
+        if (handTiles.contains(tileName)) {
+            event.reply("你選擇了出牌：" + tileName)
+                    .setEphemeral(true)
+                    .queue();
+        } else {
+            event.reply("無效的操作！").setEphemeral(true).queue();
+        }
+    }
 }

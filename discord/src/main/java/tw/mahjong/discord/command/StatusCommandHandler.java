@@ -39,7 +39,7 @@ public class StatusCommandHandler implements CommandHandler {
         List<Button> rowButtons = new ArrayList<>();
 
         for (int i = 0; i < handTiles.size(); i++) {
-            rowButtons.add(Button.primary(handTiles.get(i).value, handTiles.get(i).value));
+            rowButtons.add(Button.primary(handTiles.get(i).toString() + i, handTiles.get(i).toString()));
 
             // 每 5 個按鈕就加入一個 Row
             if ((i + 1) % 5 == 0 || i == handTiles.size() - 1) {

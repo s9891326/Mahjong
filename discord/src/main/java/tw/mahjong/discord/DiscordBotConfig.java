@@ -30,11 +30,6 @@ public class DiscordBotConfig {
     }
 
     @Bean
-    public CommandData startCommand() {
-        return Commands.slash("start", "Start a new Mahjong game");
-    }
-
-    @Bean
     public CommandData statusCommand() {
         return Commands.slash("status", "Get current game status");
     }
@@ -48,7 +43,6 @@ public class DiscordBotConfig {
     public CommandData[] allCommands() {
         return new CommandData[]{
                 createCommand(),
-                startCommand(),
                 joinCommand(),
                 drawCommand(),
                 statusCommand(),

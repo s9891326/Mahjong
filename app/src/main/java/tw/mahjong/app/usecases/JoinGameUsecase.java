@@ -1,8 +1,8 @@
 package tw.mahjong.app.usecases;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import tw.mahjong.app.Presenter;
-import tw.mahjong.app.input.JoinGameInput;
 import tw.mahjong.app.repository.Repository;
 import tw.mahjong.domain.MahjongGame;
 import tw.mahjong.domain.Player;
@@ -27,10 +27,17 @@ public class JoinGameUsecase {
         player.setName(input.playerName);
         List<DomainEvent> events = game.join(player);
 
+
         // 存
         repository.save(game);
 
         // 推
         presenter.present(events);
+    }
+
+    @AllArgsConstructor
+    public static class JoinGameInput {
+        public String gameId;
+        public String playerName;
     }
 }

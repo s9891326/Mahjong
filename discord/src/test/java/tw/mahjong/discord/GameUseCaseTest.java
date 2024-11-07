@@ -6,11 +6,9 @@ import tw.mahjong.app.repository.Repository;
 import tw.mahjong.app.usecases.CreateGameUsecase;
 import tw.mahjong.app.usecases.GetStatusUsecase;
 import tw.mahjong.app.usecases.JoinGameUsecase;
-import tw.mahjong.app.usecases.StartGameUsecase;
 import tw.mahjong.discord.presenter.CreateGamePresenter;
 import tw.mahjong.discord.presenter.GetStatusPresenter;
 import tw.mahjong.discord.presenter.JoinGamePresenter;
-import tw.mahjong.discord.presenter.StartGamePresenter;
 import tw.mahjong.discord.repository.Common;
 import tw.mahjong.domain.Player;
 import tw.mahjong.domain.Round;
@@ -31,8 +29,6 @@ public class GameUseCaseTest {
         assertTrue(joinGame(gameId, "3"));
         assertTrue(joinGame(gameId, "4"));
 
-        assertTrue(startGame(gameId));
-
         GetStatusPresenter.GetStatusBotModel botModel1 = get_status(gameId, "1");
         System.out.println(botModel1.getGameId() + botModel1.getHandTile() + botModel1.getDoorFront());
         assertEquals(botModel1.getGameId(), gameId);
@@ -49,13 +45,6 @@ public class GameUseCaseTest {
         }
     }
 
-    private boolean startGame(String gameId) {
-        StartGameUsecase startGameUsecase = new StartGameUsecase(repository);
-        Presenter presenter = new StartGamePresenter();
-        startGameUsecase.execute(startGameUsecase.input(gameId), presenter);
-        return (boolean) presenter.asBotModel();
-    }
-
     private GetStatusPresenter.GetStatusBotModel get_status(String gameId, String playerName) {
         GetStatusUsecase getStatusUsecase = new GetStatusUsecase(repository);
         Presenter presenter = new GetStatusPresenter();
@@ -67,6 +56,7 @@ public class GameUseCaseTest {
         JoinGameUsecase joinGameUsecase = new JoinGameUsecase(repository);
         Presenter presenter = new JoinGamePresenter();
         joinGameUsecase.execute(joinGameUsecase.input(gameId, playerName), presenter);
+
         return (boolean) presenter.asBotModel();
     }
 

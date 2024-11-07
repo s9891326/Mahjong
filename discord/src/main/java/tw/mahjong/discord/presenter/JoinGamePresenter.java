@@ -12,7 +12,6 @@ public class JoinGamePresenter extends Presenter {
     @Override
     public void present(List<DomainEvent> events) {
         event = Presenter.getEvent(events, JoinEvent.class).orElse(null);
-
     }
 
     @Override
