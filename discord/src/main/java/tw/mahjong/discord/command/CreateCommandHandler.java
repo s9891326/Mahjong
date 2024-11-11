@@ -5,14 +5,13 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import tw.mahjong.app.Presenter;
 import tw.mahjong.app.repository.Repository;
 import tw.mahjong.app.usecases.CreateGameUsecase;
+import tw.mahjong.discord.components.UserInfoComponent;
 import tw.mahjong.discord.presenter.CreateGamePresenter;
-
-import java.util.Map;
 
 @AllArgsConstructor
 public class CreateCommandHandler implements CommandHandler {
     private final Repository repository;
-    private final Map<String, String> userWithGameId;
+    private final UserInfoComponent userInfoComponent;
 
     @Override
     public void handle(SlashCommandInteractionEvent event) {
@@ -22,6 +21,6 @@ public class CreateCommandHandler implements CommandHandler {
 
         String gameId = presenter.asBotModel().toString();
         event.reply(gameId).queue();
-        userWithGameId.put(event.getUser().getName(), gameId);
+        userInfoComponent.addUserAndGameId(event.getUser(), gameId);
     }
 }

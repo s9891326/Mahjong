@@ -12,6 +12,7 @@ import tw.mahjong.discord.presenter.JoinGamePresenter;
 import tw.mahjong.discord.repository.Common;
 import tw.mahjong.domain.Player;
 import tw.mahjong.domain.Round;
+import tw.mahjong.domain.events.JoinEvent;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,10 +34,10 @@ public class GameUseCaseTest {
         System.out.println(botModel1.getGameId() + botModel1.getHandTile() + botModel1.getDoorFront());
         assertEquals(botModel1.getGameId(), gameId);
         assertEquals(botModel1.getHandTile().size(), 17);
-        checkEveryoneHandTileSize(botModel1.getLastRound());
+        checkEveryoneHandTileSize(botModel1.getRound());
 
         GetStatusPresenter.GetStatusBotModel botModel2 = get_status(gameId, "2");
-        checkEveryoneHandTileSize(botModel2.getLastRound());
+        checkEveryoneHandTileSize(botModel2.getRound());
     }
 
     private void checkEveryoneHandTileSize(Round lastRound) {
@@ -56,8 +57,8 @@ public class GameUseCaseTest {
         JoinGameUsecase joinGameUsecase = new JoinGameUsecase(repository);
         Presenter presenter = new JoinGamePresenter();
         joinGameUsecase.execute(joinGameUsecase.input(gameId, playerName), presenter);
-
-        return (boolean) presenter.asBotModel();
+        JoinEvent botModel = (JoinEvent) presenter.asBotModel();
+        return botModel.success;
     }
 
     private String createGame(String playerName) {

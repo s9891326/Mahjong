@@ -23,8 +23,9 @@ public class MahjongGame {
         this.players.add(player);
         if (this.players.size() == PLAYER_NUMS) {
             this.start();
+            return List.of(new JoinEvent(id, true, true));
         }
-        return List.of(new JoinEvent(id, true));
+        return List.of(new JoinEvent(id, true, false));
     }
 
     public void start() {

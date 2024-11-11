@@ -3,13 +3,13 @@ package tw.mahjong.discord.presenter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import tw.mahjong.app.Presenter;
+import tw.mahjong.domain.Deck;
 import tw.mahjong.domain.Player;
 import tw.mahjong.domain.Round;
 import tw.mahjong.domain.Tile;
 import tw.mahjong.domain.events.DomainEvent;
 import tw.mahjong.domain.events.GameStatusEvent;
 
-import java.util.Deque;
 import java.util.List;
 
 public class GetStatusPresenter extends Presenter {
@@ -29,7 +29,15 @@ public class GetStatusPresenter extends Presenter {
     public Object asBotModel(Object object) {
         String playerName = object.toString();
         Player player = event.game.findPlayerByName(playerName);
-        return new GetStatusBotModel(event.game.getId(), player.getHandTile(), player.getDoorFront(), event.game.getRounds());
+        Round lastRound = event.game.getLastRound();
+        
+        return new GetStatusBotModel(
+                event.game.getId(),
+                player.getHandTile(),
+                player.getDoorFront(),
+                lastRound,
+                lastRound.getDeck()
+        );
     }
 
     @Data
@@ -38,10 +46,7 @@ public class GetStatusPresenter extends Presenter {
         private String gameId;
         private List<Tile> handTile;
         private List<Tile> doorFront;
-        private Deque<Round> rounds;
-
-        public Round getLastRound() {
-            return rounds.peekLast();
-        }
+        private Round round;
+        private Deck deck;
     }
 }

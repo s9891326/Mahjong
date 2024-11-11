@@ -6,4 +6,5 @@ import lombok.AllArgsConstructor;
 public class JoinEvent implements DomainEvent {
     public String gameId;
     public boolean success;
+    public boolean isGameStarted;
 }

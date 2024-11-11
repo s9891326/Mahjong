@@ -16,6 +16,6 @@ public class JoinGamePresenter extends Presenter {
 
     @Override
     public Object asBotModel() {
-        return event.success;
+        return event;
     }
 }

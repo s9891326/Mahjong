@@ -27,7 +27,6 @@ public class JoinGameUsecase {
         player.setName(input.playerName);
         List<DomainEvent> events = game.join(player);
 
-
         // 存
         repository.save(game);
 

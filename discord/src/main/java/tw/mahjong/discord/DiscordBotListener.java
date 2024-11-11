@@ -1,41 +1,56 @@
 package tw.mahjong.discord;
 
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tw.mahjong.discord.command.CommandHandler;
 import tw.mahjong.discord.command.CommandHandlerFactory;
+import tw.mahjong.discord.components.UserInfoComponent;
 import tw.mahjong.discord.repository.Common;
 import tw.mahjong.domain.exceptions.MahjongException;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class DiscordBotListener extends ListenerAdapter {
     private final CommandHandlerFactory commandHandlerFactory;
+    private Guild guild;
+    @Autowired
+    private UserInfoComponent userInfoComponent;
 
-    public DiscordBotListener() {
-        Map<String, String> userWithGameId = new HashMap<>();
-        commandHandlerFactory = new CommandHandlerFactory(Common.getRepository(), userWithGameId);
+    public DiscordBotListener(UserInfoComponent userInfoComponent) {
+        this.userInfoComponent = userInfoComponent;
+        commandHandlerFactory = new CommandHandlerFactory(Common.getRepository(), userInfoComponent);
+        // 註冊關閉鉤子
+        Runtime.getRuntime().addShutdownHook(new Thread(this::deletePrivateChannels));
+    }
+
+    private void deletePrivateChannels() {
+        for (String channelId : userInfoComponent.getAllChannelId()) {
+            TextChannel privateChannel = guild.getTextChannelById(channelId);
+            if (privateChannel != null) {
+                privateChannel.delete().queue();
+            }
+        }
     }
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+//        User user = event.getUser();
+        guild = event.getGuild();
+//        Member m = guild.getMember(user);
+//        guild.getTextChannelsByName(user.getName() + "-private", true).get(0).delete().queue();
+//        event.getUser().openPrivateChannel().queue(c -> {
+//            c.sendMessage("hello").queue();
+//        });
         CommandHandler handler = commandHandlerFactory.getHandler(event.getName());
         try {
             handler.handle(event);
-
-            // 為了方便測試
-            if (event.getName().equals("create")) {
-                handler = commandHandlerFactory.getHandler("join");
-                for (int i = 0; i < 3; i++) {
-                    handler.handle(event);
-                }
-            }
         } catch (MahjongException mahjongException) {
             event.reply(mahjongException.getMessage()).queue();
         }
@@ -63,7 +78,7 @@ public class DiscordBotListener extends ListenerAdapter {
     }
 
 //    @Override
-//    public void onReady(net.dv8tion.jda.api.events.session.ReadyEvent event) {
+//    public void onReady(ReadyEvent event) {
 //        TextChannel channel = event.getJDA().getTextChannelById("1301098117122228226");
 //        if (channel != null) {
 //            channel.sendMessage("請選擇一張牌來出牌：")
